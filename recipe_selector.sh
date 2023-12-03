@@ -40,12 +40,6 @@ if [ -d "$recipes" ]; then
         selected_files+=("${files[index]}")
     done
 
-    # Print the selected files
-    echo "Randomly chosen files:"
-    for file in "${selected_files[@]}"; do
-        echo "$file"
-    done
-
     # Call the Python script and pass the selected files as arguments
     python3 filter_ingredients.py "${selected_files[@]}"
 else
