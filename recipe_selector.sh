@@ -35,11 +35,19 @@ if [ -d "$recipes" ]; then
     indices=($(shuf -i 0-$(($num_files-1)) -n $N))
 
     # Loop through the randomly chosen indices and get the corresponding files
-    echo "Randomly chosen files:"
+    selected_files=()
     for index in "${indices[@]}"; do
-        randomly_chosen_file="${files[index]}"
-        echo "$randomly_chosen_file"
+        selected_files+=("${files[index]}")
     done
+
+    # Print the selected files
+    echo "Randomly chosen files:"
+    for file in "${selected_files[@]}"; do
+        echo "$file"
+    done
+
+    # Call the Python script and pass the selected files as arguments
+    python3 filter_ingredients.py "${selected_files[@]}"
 else
     echo "Error: Directory '$recipes' not found."
     exit 1
