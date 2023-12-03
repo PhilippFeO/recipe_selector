@@ -40,8 +40,8 @@ if [ -d "$recipes" ]; then
         selected_files+=("${files[index]}")
     done
 
-    # Call the Python script and pass the selected files as arguments
-    python3 filter_ingredients.py "${selected_files[@]}"
+    # Retrieve ingredients of selected files
+    python3 retrieve_ingredients.py "${selected_files[@]}"
 else
     echo "Error: Directory '$recipes' not found."
     exit 1
