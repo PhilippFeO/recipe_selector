@@ -41,7 +41,7 @@ if [ -d "$recipes" ]; then
     done
 
     # Retrieve ingredients of selected files
-    python3 retrieve_ingredients.py "${selected_files[@]}"
+    python3 retrieve_ingredients.py "${selected_files[@]}" > ingredients.txt
 else
     echo "Error: Directory '$recipes' not found."
     exit 1
