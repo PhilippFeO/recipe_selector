@@ -1,24 +1,6 @@
 import sys
-
-
-def read_ingredients(file_path):
-    ingredients = []
-    reading_ingredients = False
-
-    with open(file_path, 'r', encoding='utf-8') as file:
-        for line in file:
-            line = line.strip()
-
-            # Start reading ingredients after the line containing "## Zutaten"
-            if reading_ingredients:
-                # Stop reading at the first empty line
-                if not line:
-                    break
-                ingredients.append(line[2:])
-            elif "## Zutaten" in line:
-                reading_ingredients = True
-
-    return ingredients
+import os
+from recipe import read_ingredients
 
 
 def main():
@@ -27,11 +9,12 @@ def main():
 
     # Check if at least one file is provided
     if num_args <= 1:
-        print("Usage: python script.py file1.md file2.md ...")
+        print(
+            f"Usage: python {os.path.basename(__file__)} recipe_1.yaml ...")
         sys.exit(1)
 
     # Initialize a superlist to store ingredients from all files
-    superlist = []
+    all_ingredients = []
 
     # Iterate through command-line arguments starting from the second argument
     for arg_index in range(1, num_args):
@@ -41,14 +24,32 @@ def main():
         ingredients = read_ingredients(file_path)
 
         # Append the ingredients to the superlist
-        superlist.append(ingredients)
+        all_ingredients.extend(ingredients)
+        all_ingredients = sorted(all_ingredients,
+                                 key=lambda ingredient: ingredient.type)
 
-    # Print the superlist
-    print("===== Per file list of Ingredients =====")
-    for index, ingredients in enumerate(superlist, start=1):
-        print(f"\n{sys.argv[index].split('/')[1]}:")
-        for ingredient in ingredients:
-            print(f"- {ingredient}")
+    # Save list of ingredients
+    # find longest element for proper formatting of the output
+    max_len_name = max((len(i.name) for i in all_ingredients)) + 2
+    # Print a header/column names
+    field_names = ["Name", "Menge", "Art", "Optional"]
+    header = ' '.join((fn.ljust(max_len_name) for fn in field_names))
+    print(header)
+    print('-' * len(header))
+    # Print rows
+    for ingredient in all_ingredients:
+        # apply padding according to longest entry in table
+        print(ingredient.name.ljust(max_len_name),
+              ingredient.amount.ljust(max_len_name),
+              ingredient.type.ljust(max_len_name),
+              ingredient.optional)
+
+    # TODO: Write table into text file <15-12-2023>
+    # TODO: Add name of recipe to each ingredient <15-12-2023>
+    #   Maybe by adding a recipe attribute to the Ingredient class
+    # TODO: Add weight to each ingredient to sort according to order in supermarket <15-12-2023>
+    #   fi. vegetables and fruits come first, then diary, etc.
+    # TODO: Add method similar to __str__ to Ingredient to construct the string for printing. This method might take one argument, the padding length, in my case max_len_name <15-12-2023>
 
 
 if __name__ == "__main__":
