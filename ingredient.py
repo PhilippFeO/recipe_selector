@@ -2,15 +2,17 @@ import yaml
 
 
 class Ingredient:
-    def __init__(self, name, amount, type, optional=False):
+    field_names = ["Name", "Menge", "Kategorie", "Optional"]
+
+    def __init__(self, name, amount, category, optional=False):
         self.name = name
         self.amount = str(amount)
-        self.type = type
+        self.category = category
         self.optional = optional
 
     def __str__(self):
         optional_str = " (Optional)" if self.optional else ""
-        return f"{self.name}: {self.amount} ({self.type}){optional_str}"
+        return f"{self.name}: {self.amount} ({self.category}){optional_str}"
 
 
 def read_ingredients(file_path):
