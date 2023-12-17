@@ -1,5 +1,6 @@
 import yaml
 import os
+import sys
 
 
 class Ingredient:
@@ -34,7 +35,7 @@ class Ingredient:
             s = f"Key\n\t{self.category.lower()}\t({self.name})\nnot found in\n"
             cw_dict = '\n\t'.join(f"{k}: {v}"
                                   for k, v in self._category_weights.items())
-            print('\t'.join((s, cw_dict)))
+            print('\t'.join((s, cw_dict)), file=sys.stderr)
 
     def __str__(self):
         return Ingredient.to_table_string([self.optional,
