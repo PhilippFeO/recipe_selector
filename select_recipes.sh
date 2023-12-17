@@ -11,17 +11,17 @@ if [ -d "$recipes" ]; then
     # Get a list of files in the directory
     files=("$recipes"/*)
 
+    # Check if there are files in the directory, an empty recipe directory makes no sense
+    if [ $num_files -eq 0 ]; then
+        echo "Error: No files found in the directory '$recipes'."
+        exit 1
+    fi
+
     # Get the number of files in the directory
     num_files=$(ls $recipes | wc -w)
     if [ $# -ne 1 ]; then
         echo "Usage: ./recipe_selector.sh N"
         echo -e "\twhere 0 < N < \$(ls $recipes | wc -w)"
-        exit 1
-    fi
-
-    # Check if there are files in the directory
-    if [ $num_files -eq 0 ]; then
-        echo "Error: No files found in the directory '$recipes'."
         exit 1
     fi
 
