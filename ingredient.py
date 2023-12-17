@@ -29,7 +29,7 @@ class Ingredient:
         except KeyError:
             self.category_weight = 0
             # Print information about missung category
-            s = f"Key\n\t{category.lower()}\nnot found in\n"
+            s = f"Key\n\t{self.category.lower()}\t({self.name})\nnot found in\n"
             cw_dict = '\n\t'.join(f"{k}: {v}"
                                   for k, v in self._category_weights.items())
             print('\t'.join((s, cw_dict)))
@@ -49,11 +49,7 @@ class Ingredient:
         """
         Format elements (field names, ingredient) as string for shopping list.
         """
-        optional = attributes[0]
-        name = attributes[1]
-        amount = attributes[2]
-        category = attributes[3]
-        meal = attributes[4]
+        optional, name, amount, category, meal = attributes
         # Cap at _padding, no matter what (keep in mind when comosing a recipe)
         pad = Ingredient._padding
         scw = Ingredient._space_column_width
