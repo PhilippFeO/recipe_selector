@@ -6,13 +6,15 @@ class Ingredient:
     field_names = ["?", "Name", "Menge", "Kategorie", "Gericht"]
     _padding = 15
     _space_column_width = 3
-    _category_weights = {'vegetable': 10,
-                         'fruit': 9,
-                         'diary': 8,
-                         'noodles': 6,
-                         'seasoning': 3,
+    _category_weights = {'gemüse': 10,
+                         'obst': 9,
+                         'milchprodukt': 8,
+                         'kühlware': 7,
+                         'nudeln': 6,
+                         'gewürz': 3,
                          'alltagsartikel': 2,
-                         'tiefkühlprodukt': 1}
+                         'tiefkühlware': 1,
+                         'bäcker': 0}
 
     def __init__(self, name, quantity, category, optional=False, meal=''):
         self.name = name
@@ -69,7 +71,7 @@ def read_ingredients(file_path):
 
     ingredients = recipe_data.get("ingredients", [])
     # basename provides file name, splittext separates name and extension, [0] uses plain file name
-    return [Ingredient(**ingredient, meal=os.path.splitext(os.path.basename(file_path))[0])
+    return [Ingredient(**ingredient, meal=os.path.splitext(os.path.basename(file_path))[0].replace('_', ' '))
             for ingredient in ingredients]
 
 
