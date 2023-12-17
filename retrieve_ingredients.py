@@ -29,11 +29,13 @@ def main():
                                  key=lambda ingredient: ingredient.category_weight,
                                  reverse=True)
 
-    # Save list of ingredients
+    # List is saved via ">" operation in main bash script.
+    # Print list of ingredients if run directly from command line.
     header = Ingredient.to_table_string()
-    with open('shopping_list.txt', 'w') as sl:
-        sl.write(f"{header}\n\n")
-        sl.writelines((f"{ingredient}\n" for ingredient in all_ingredients))
+    print(header)
+    print()
+    for ingredient in all_ingredients:
+        print(ingredient)
 
 
 if __name__ == "__main__":
