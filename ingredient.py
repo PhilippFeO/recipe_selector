@@ -14,9 +14,9 @@ class Ingredient:
                          'alltagsartikel': 2,
                          'tiefkühlprodukt': 1}
 
-    def __init__(self, name, amount, category, optional=False, meal=''):
+    def __init__(self, name, quantity, category, optional=False, meal=''):
         self.name = name
-        self.amount = str(amount)
+        self.quantity = str(quantity)
         self.category = category
         self.optional = optional
         self.meal = meal
@@ -37,7 +37,7 @@ class Ingredient:
     def __str__(self):
         return Ingredient.to_table_string([self.optional,
                                            self.name,
-                                           self.amount,
+                                           self.quantity,
                                            self.category,
                                            self.meal])
 
@@ -49,14 +49,14 @@ class Ingredient:
         """
         Format elements (field names, ingredient) as string for shopping list.
         """
-        optional, name, amount, category, meal = attributes
+        optional, name, quantity, category, meal = attributes
         # Cap at _padding, no matter what (keep in mind when comosing a recipe)
         pad = Ingredient._padding
         scw = Ingredient._space_column_width
         s = '?' if optional == '?' else '1' if optional else ' '
         s = (' ' * scw).join((s, *(f"{attr[:pad]:<{pad}}"
                                    for attr in [name,
-                                                amount,
+                                                quantity,
                                                 category])))
         s = ' '.join((s, meal))
         return s
