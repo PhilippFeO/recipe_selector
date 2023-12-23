@@ -14,7 +14,7 @@ def main():
         sys.exit(1)
 
     # Initialize a superlist to store ingredients from all files
-    all_ingredients = []
+    all_ingredients: list[Ingredient] = []
 
     # Iterate through command-line arguments starting from the second argument
     for arg_index in range(1, num_args):
@@ -34,6 +34,10 @@ def main():
     with open('shopping_list.txt', 'w') as sl:
         sl.write(f"{header}\n\n")
         sl.writelines((f"{ingredient}\n" for ingredient in all_ingredients))
+
+    print("-- URLs --")
+    for ing in all_ingredients:
+        print(f'{ing.name}: {ing.url}')
 
 
 if __name__ == "__main__":

@@ -17,21 +17,23 @@ class Ingredient:
                          'tiefkühlware': 1,
                          'bäcker': 0}
 
-    def __init__(self, name, quantity, category, optional=False, meal=''):
+    def __init__(self, name, quantity, category, url='HIER KÖNNTE IHRE URL STEHEN', optional=False, meal=''):
         self.name = name
         self.quantity = str(quantity)
         self.category = category
+        self.url = url
         self.optional = optional
         self.meal = meal
         # Assign category weight accoirding to order in supermarket (=> walk from
         # category to category to be efficient).
         # This key is is used for sorting the ingredients when generating the shopping list.
-        try:
-            self.category_weight = self._category_weights[category.lower()]
         # Maybe a category is missing, then weight defaults to 0 and has to be added manually.
+        try:
+            self.category_weight = Ingredient._category_weights[category.lower()]
         except KeyError:
             self.category_weight = 0
             # Print information about missung category
+            # TODO: accomplish this via logging <23-12-2023>
             s = f"Key\n\t{self.category.lower()}\t({self.name})\nnot found in\n"
             cw_dict = '\n\t'.join(f"{k}: {v}"
                                   for k, v in self._category_weights.items())
@@ -47,7 +49,7 @@ class Ingredient:
     # Also used for crafting a header for the table, hence class method and first argument as list
     # (The field names are provided as list, attributes follow)
     # Padding, to have a small neat table
-    @ classmethod
+    @classmethod
     def to_table_string(cls, attributes: list = field_names):
         """
         Format elements (field names, ingredient) as string for shopping list.
