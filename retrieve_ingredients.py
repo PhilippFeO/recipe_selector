@@ -4,6 +4,9 @@ from ingredient import Ingredient, read_ingredients
 
 
 def main():
+    """
+    This function is called via `python3 retrieve_ingredients recipe-1.yaml ...`. Hence, reading and checking `sys.argv`.
+    """
     # Get the number of command-line arguments
     num_args = len(sys.argv)
 
