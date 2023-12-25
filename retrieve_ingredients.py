@@ -24,6 +24,7 @@ def retrieve_ingredients():
     # Iterate through command-line arguments starting from the second argument
     for arg_index in range(1, num_args):
         file_path = sys.argv[arg_index]
+        print(file_path)
 
         # Read ingredients from the current file
         ingredients = read_ingredients(file_path)
@@ -40,18 +41,12 @@ def retrieve_ingredients():
         sl.write(f"{header}\n\n")
         sl.writelines((f"{ingredient}\n" for ingredient in all_ingredients))
 
-    print("-- URLs --")
-    for ing in all_ingredients:
-        print(f'{ing.name}: {ing.url}')
-
-    # Key = ingredient, Value = url
+    # Key = Ingredient.name, Value = url
     urls: dict[str, str] = 'ingredient_url.csv'
     urls = read_ingredient_url_csv(urls)
 
     # open urls
-    open_ingredient_urls(ingredients, urls)
-
-    return all_ingredients
+    open_ingredient_urls(all_ingredients, urls)
 
 
 if __name__ == "__main__":
