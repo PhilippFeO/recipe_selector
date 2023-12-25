@@ -1,9 +1,11 @@
 import sys
 import os
 from ingredient import Ingredient, read_ingredients
+from read_url import read_ingredient_url_csv
+from open_urls import open_ingredient_urls
 
 
-def main():
+def retrieve_ingredients():
     """
     This function is called via `python3 retrieve_ingredients recipe-1.yaml ...`. Hence, reading and checking `sys.argv`.
     """
@@ -42,6 +44,15 @@ def main():
     for ing in all_ingredients:
         print(f'{ing.name}: {ing.url}')
 
+    # Key = ingredient, Value = url
+    urls: dict[str, str] = 'ingredient_url.csv'
+    urls = read_ingredient_url_csv(urls)
+
+    # open urls
+    open_ingredient_urls(ingredients, urls)
+
+    return all_ingredients
+
 
 if __name__ == "__main__":
-    main()
+    retrieve_ingredients()
