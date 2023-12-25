@@ -5,7 +5,7 @@ from read_url import read_ingredient_url_csv
 from open_urls import open_ingredient_urls
 
 
-def retrieve_ingredients():
+def main():
     """
     This function is called via `python3 retrieve_ingredients recipe-1.yaml ...`. Hence, reading and checking `sys.argv`.
     """
@@ -50,4 +50,4 @@ def retrieve_ingredients():
 
 
 if __name__ == "__main__":
-    retrieve_ingredients()
+    main()
