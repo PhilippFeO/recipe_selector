@@ -1,12 +1,9 @@
 import webbrowser
-from ingredient import Ingredient
+import sys
 
 
-def open_ingredient_urls(ingredients: list[Ingredient], urls: dict[str, str]):
-    # Update with your Firefox installation path
+def open_ingredient_urls(ingredients: list[str], urls: dict[str, str]):
     firefox_path = "/usr/bin/firefox"
-
-    # Set the path to Firefox executable
     webbrowser.register('firefox', None, webbrowser.BackgroundBrowser(firefox_path))
 
     # Open browser, ie. landing page to log in
@@ -16,8 +13,8 @@ def open_ingredient_urls(ingredients: list[Ingredient], urls: dict[str, str]):
     # Open each URL in Firefox
     for ing in ingredients:
         try:
-            url = urls[ing.name]
+            url = urls[ing]
         except KeyError:
-            print(f"Key '{ing.name}' has no url.")
+            print(f"Key '{ing}' has no url.", file=sys.stderr)
             continue  # No key in dict => continue loop
         webbrowser.get('firefox').open_new_tab(url)

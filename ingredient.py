@@ -4,7 +4,9 @@ import sys
 
 
 class Ingredient:
-    field_names = ["?", "Name", "Menge", "Kategorie", "Gericht"]
+    field_names = ['?', 'Name', 'Menge', 'Kategorie', 'Gericht']
+    # Dont hardcode column number of "Name" because this number is used to filter for the ingredients with awk (s. ./main.py)
+    _name_col_num = field_names.index('Name') + 1
     _padding = 15
     _space_column_width = 3
     _category_weights = {'gemüse': 10,
@@ -58,7 +60,7 @@ class Ingredient:
         # Cap at _padding, no matter what (keep in mind when comosing a recipe)
         pad = Ingredient._padding
         scw = Ingredient._space_column_width
-        s = '?' if optional == '?' else '1' if optional else ' '
+        s = '?' if optional == '?' else '1' if optional else '.'
         s = (' ' * scw).join((s, *(f"{attr[:pad]:<{pad}}"
                                    for attr in [name,
                                                 quantity,
