@@ -81,11 +81,12 @@ def read_ingredients(file_path):
 
 
 if __name__ == "__main__":
-    file_path = "recipes/spaghetti.yaml"
+    file_path = "recipes/Spaghetti_mit_Gemüse.yml"
     ingredients = read_ingredients(file_path)
 
     for i in ingredients:
         print(i)
+
 
 # class Recipe:
 #     def __init__(self, title, servings, ingredients, instructions):
