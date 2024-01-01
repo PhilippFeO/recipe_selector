@@ -1,8 +1,9 @@
 import sys
 import os
 import subprocess
-from ingredient import Ingredient, read_ingredients
-from read_url import read_ingredient_url_csv
+from ingredient import Ingredient
+from read_ingredients import read_ingredients
+from read_csv import read_csv
 from open_urls import open_ingredient_urls
 
 
@@ -60,8 +61,8 @@ def main():
     final_ingredients: list[str] = awk_output.stdout.split('\n')[2:-1]
 
     # Key = Ingredient.name, Value = url
-    urls: dict[str, str] = 'ingredient_url.csv'
-    urls = read_ingredient_url_csv(urls)
+    urls_file = 'res/ingredient_url.csv'
+    urls: dict[str, str] = read_csv(urls_file, to_int=False)
 
     open_ingredient_urls(final_ingredients, urls)
 

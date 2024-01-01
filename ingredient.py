@@ -1,6 +1,5 @@
-import yaml
-import os
 import sys
+from read_csv import read_csv
 
 
 class Ingredient:
@@ -9,15 +8,7 @@ class Ingredient:
     _name_col_num = field_names.index('Name') + 1
     _padding = 15
     _space_column_width = 3
-    _category_weights = {'gemüse': 10,
-                         'obst': 9,
-                         'milchprodukt': 8,
-                         'kühlware': 7,
-                         'nudeln': 6,
-                         'gewürz': 3,
-                         'alltagsartikel': 2,
-                         'tiefkühlware': 1,
-                         'bäcker': 0}
+    _category_weights = None
 
     def __init__(self, name, quantity, category, url='HIER KÖNNTE IHRE URL STEHEN', optional=False, meal=''):
         self.name = name
@@ -29,7 +20,8 @@ class Ingredient:
         # Assign category weight accoirding to order in supermarket (=> walk from
         # category to category to be efficient).
         # This key is is used for sorting the ingredients when generating the shopping list.
-        # Maybe a category is missing, then weight defaults to 0 and has to be added manually.
+        # Maybe a category i{}s missing, then weight defaults to 0 and has to be added manually.
+        Ingredient._category_weights = read_csv('res/category_weights.csv', to_int=True)
         try:
             self.category_weight = Ingredient._category_weights[category.lower()]
         except KeyError:
@@ -67,25 +59,6 @@ class Ingredient:
                                                 category])))
         s = ' '.join((s, meal))
         return s
-
-
-def read_ingredients(file_path):
-    recipe_data = None
-    with open(file_path, 'r') as file:
-        recipe_data = yaml.safe_load(file)
-
-    ingredients = recipe_data.get("ingredients", [])
-    # basename provides file name, splittext separates name and extension, [0] uses plain file name
-    return [Ingredient(**ingredient, meal=os.path.splitext(os.path.basename(file_path))[0].replace('_', ' '))
-            for ingredient in ingredients]
-
-
-if __name__ == "__main__":
-    file_path = "recipes/Spaghetti_mit_Gemüse.yml"
-    ingredients = read_ingredients(file_path)
-
-    for i in ingredients:
-        print(i)
 
 
 # class Recipe:
