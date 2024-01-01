@@ -2,4 +2,4 @@ recipes/
 __pycache__
 shopping_list.txt
 TODO.md
-ingredient_url.csv
+*.csv
