@@ -7,6 +7,7 @@ from read_csv import read_csv
 #   Idea: Closure, ie. a function 'read_all_csvs' reads the csvs and returns the 'build_ingredient' function
 icu_file = 'res/ingredient_category_url.csv'
 category_weights_file = 'res/category_weights.csv'
+default_category = '-- fehlt --'
 
 
 def build_ingredients(file_path: str,
@@ -35,14 +36,18 @@ def build_ingredients(file_path: str,
             category = icu_dict[ingredient_name][0]
         except KeyError:
             print(
-                f'Ingredient <{ingredient_name}> missing in {icu_file}. Default value for <category> will be used.')
-            category = ''
-        try:
-            c_weight = category_weights[category]
-        except KeyError:
-            print(
-                f'Category <{category}> missing in {category_weights_file}. Default value for <category_weight> will be used.')
-            c_weight = 0
+                f'Ingredient "{ingredient_name}" missing in "{icu_file}". Default value for <category> will be used.')
+            category = default_category
+            c_weight = 0  # Set here, because 'category_weights' won't be queried
+        # No ingredient => no category => no category_weight
+        # => Proceed if 'category' is a valid key
+        if category != default_category:
+            try:
+                c_weight = category_weights[category]
+            except KeyError:
+                print(
+                    f'Category "{category}" missing in "{category_weights_file}". Default value for <category_weight> will be used.')
+                c_weight = 0
         # Build ingredient and insert into list
         recipe_ingredients.append(
             Ingredient(**ingredient,
