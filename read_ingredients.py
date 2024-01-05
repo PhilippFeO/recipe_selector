@@ -28,28 +28,26 @@ def build_ingredients(file_path: str,
     ingredients: list[dict[str, str]] = recipe_data.get("ingredients", [])
     for ingredient in ingredients:
         # Retrive information from CSV files ('category', 'url' and 'category_weight')
-        name = ingredient['name']
+        ingredient_name = ingredient['name']
         # Check for 'KeyError' in all CSV files
         # DONE: KeyError might occur <05-01-2024>
         try:
-            category = icu_dict[name][0]
-            url = icu_dict[name][1]
+            category = icu_dict[ingredient_name][0]
         except KeyError:
             print(
-                f'Ingredient <{name}> missing in {icu_file}. Default values will be used.')
-            category, url = '', ''
+                f'Ingredient <{ingredient_name}> missing in {icu_file}. Default value for <category> will be used.')
+            category = ''
         try:
             c_weight = category_weights[category]
         except KeyError:
             print(
-                f'Category <{category}> missing in {category_weights_file}. Default values will be used.')
+                f'Category <{category}> missing in {category_weights_file}. Default value for <category_weight> will be used.')
             c_weight = 0
         # Build ingredient and insert into list
         recipe_ingredients.append(
             Ingredient(**ingredient,
                        category=category,
                        category_weight=c_weight,
-                       url=url,
                        # basename provides file name, splittext separates name and extension, [0] uses plain file name
                        # TODO: Add 'recipe: RECIPENAME' key to every recipe to avoid this ugly line of code <05-01-2024>
                        meal=os.path.splitext(os.path.basename(file_path))[0].replace('_', ' ')))
