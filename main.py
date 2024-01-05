@@ -61,6 +61,7 @@ def main():
     # awk adds '\n', hence there is an empty string entry on the last index
     # I dont know why awk does it and I dont care
     # list[str]!!! The edited table was splitted above and 'final_ingerdients' contains the names of the ingredients, not the objects!
+    # TODO: User might delete shopping list completly => [2:-1] becomes wrong <05-01-2024>
     final_ingredient_names: list[str] = awk_output.stdout.split('\n')[2:-1]
 
     open_ingredient_urls(final_ingredient_names, icu_dict)
