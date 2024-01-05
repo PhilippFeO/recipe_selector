@@ -39,7 +39,7 @@ class Ingredient:
         # Cap at _padding, no matter what (keep in mind when comosing a recipe)
         pad = Ingredient._padding
         scw = Ingredient._space_column_width
-        s = '?' if optional == '?' else '1' if optional else '.'
+        s = '?' if optional == '?' else '1' if optional else '•'
         s = (' ' * scw).join((s, *(f"{attr[:pad]:<{pad}}"
                                    for attr in [name,
                                                 quantity,
