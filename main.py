@@ -24,7 +24,7 @@ def main():
     icu_dict: dict[str, tuple[str, str]] = read_csv('res/ingredient_category_url.csv', to_int=False)
     category_weights: dict[str, int] = read_csv('res/category_weights.csv', to_int=True)
 
-    # Initialize a superlist to store ingredients from all files
+    # Superlist to store ingredients from all files
     all_ingredients: list[Ingredient] = []
 
     # Iterate through command-line arguments starting from the second argument
@@ -47,13 +47,9 @@ def main():
         slf.writelines((f"{ingredient}\n" for ingredient in all_ingredients))
 
     # Open shopping list in $EDITOR to modify it
-    # (not all ingredients may be necessary)
+    # (some ingredients may already be in stock)
     editor = os.environ['EDITOR']
     subprocess.run([editor, shopping_list_file])
-    # Without creating 'shopping_list_file' beforehand
-    # (but has to be saved manually by ':w shopping_list.txt' which is tideous)
-    # ing_tmp = '\n'.join((f"{Ingredient}" for Ingredient in all_ingredients))
-    # subprocess.run([editor], input=ing_tmp.encode())
 
     # Filter final ingredients (second column in 'shopping_list_file')
     # Dont hardcode column number, otherwise changes have to be adapted here again => annoying
@@ -61,16 +57,13 @@ def main():
         ['awk', '-F', '   ', f'{{print ${Ingredient._name_col_num}}}', shopping_list_file],
         capture_output=True,
         text=True)
-    # Firt two entries are "Name" and "" due to header
+    # Firt two entries are "Name" and "" (empty line) due to header
     # awk adds '\n', hence there is an empty string entry on the last index
     # I dont know why awk does it and I dont care
-    final_ingredients: list[str] = awk_output.stdout.split('\n')[2:-1]
+    # list[str]!!! The edited table was splitted above and 'final_ingerdients' contains the names of the ingredients, not the objects!
+    final_ingredient_names: list[str] = awk_output.stdout.split('\n')[2:-1]
 
-    # Key = Ingredient.name, Value = url
-    urls_file = 'res/ingredient_url.csv'
-    urls: dict[str, str] = read_csv(urls_file, to_int=False)
-
-    open_ingredient_urls(final_ingredients, urls)
+    open_ingredient_urls(final_ingredient_names, icu_dict)
 
 
 if __name__ == "__main__":

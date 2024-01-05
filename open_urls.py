@@ -2,7 +2,7 @@ import webbrowser
 import sys
 
 
-def open_ingredient_urls(ingredients: list[str], urls: dict[str, str]):
+def open_ingredient_urls(ingredient_names: list[str], icu_dict: dict[str, str]):
     firefox_path = "/usr/bin/firefox"
     webbrowser.register('firefox', None, webbrowser.BackgroundBrowser(firefox_path))
 
@@ -11,10 +11,10 @@ def open_ingredient_urls(ingredients: list[str], urls: dict[str, str]):
     webbrowser.get('firefox').open_new(landing_page)
 
     # Open each URL in Firefox
-    for ing in ingredients:
+    for ing_name in ingredient_names:
         try:
-            url = urls[ing]
+            url = icu_dict[ing_name][1]
         except KeyError:
-            print(f"Key '{ing}' has no url.", file=sys.stderr)
-            continue  # No key in dict => continue loop
+            print(f"Ingredient <{ing_name}> has no url.", file=sys.stderr)
+            continue  # No ingredient_name in dict => continue loop
         webbrowser.get('firefox').open_new_tab(url)
