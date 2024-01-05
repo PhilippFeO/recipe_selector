@@ -1,54 +1,26 @@
-import sys
-from read_csv import read_csv
-
-
 class Ingredient:
     field_names = ['?', 'Name', 'Menge', 'Kategorie', 'Gericht']
     # Dont hardcode column number of "Name" because this number is used to filter for the ingredients with awk (s. ./main.py)
     _name_col_num = field_names.index('Name') + 1
     _padding = 15
     _space_column_width = 3
-    _category_weights: dict[str, int] = None
-    _category_weights_file: str = 'res/category_weights.csv'
-    _icu: dict[str, str, str] = None  # i=ingredient, c=category, u=url
-    _icu_file: str = 'res/ingredient_category_url.csv'
 
-    def __init__(self, name, quantity, category, url='HIER KÖNNTE IHRE URL STEHEN', optional=False, meal=''):
+    def __init__(self, name, quantity, optional=False,
+                 category=None,
+                 category_weight=0,
+                 url='HIER KÖNNTE IHRE WERBUNG STEHEN',
+                 meal='Lakritz'):  # I hate it
         self.name = name
-        self.quantity = str(quantity)
-        self.category = ''
-        self.url = ''
+        self.quantity = str(quantity)  # 2 (pieces), 250g, 1 Block => string necessary
         self.optional = optional
-        self.meal = meal
-        # Fill self.{category, url}
-        if Ingredient._icu is None:
-            Ingredient._icu = read_csv(Ingredient._icu_file, to_int=False)
-        try:
-            self.category = Ingredient._icu[self.name][0]
-            self.url = Ingredient._icu[self.name][1]
-        except KeyError:
-            print(f'No {self.category} in {Ingredient._icu_file}')
-            print(f'\tField {self.name}.category left empty')
-            print(f'\tField {self.name}.url left empty')
-        # Assign category weight accoirding to order in supermarket (=> walk from
+        self.category = category
+        # Category weight is assigned accoirding to order in supermarket (=> walk from
         # category to category to be efficient).
-        # This key is is used for sorting the ingredients when generating the shopping list.
-        # Maybe a category i{}s missing, then weight defaults to 0 and has to be added manually.
-        if Ingredient._category_weights is None:
-            Ingredient._category_weights = read_csv(Ingredient._category_weights_file, to_int=True)
-        # Without self.category set, quering for the weight doesn't make sense
-        if self.category and self.url:
-            try:
-                self.category_weight = Ingredient._category_weights[self.category]
-            except KeyError:
-                self.category_weight = 0
-                # Print information about missung category
-                # TODO: accomplish this via logging <23-12-2023>
-                # s = f"Key\n\t{self.category.lower()}\t({self.name})\nnot found in\n"
-                # cw_dict = '\n\t'.join(f"{k}: {v}"
-                #                       for k, v in self._category_weights.items())
-                # print('\t'.join((s, cw_dict)), file=sys.stderr)
-                print(f'{self.category} not found in {Ingredient._category_weights_file}')
+        # This key is also used for sorting the ingredients when generating the shopping list.
+        # 0 is used, when category is missing in the according csv file (2024-01-05: res/category_weight.csv)
+        self.category_weights = category_weight
+        self.url = url
+        self.meal = meal
 
     def __str__(self):
         return Ingredient.to_table_string([self.optional,

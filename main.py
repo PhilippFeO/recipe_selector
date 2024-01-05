@@ -2,7 +2,7 @@ import sys
 import os
 import subprocess
 from ingredient import Ingredient
-from read_ingredients import read_ingredients
+from read_ingredients import build_ingredients
 from read_csv import read_csv
 from open_urls import open_ingredient_urls
 
@@ -19,14 +19,20 @@ def main():
             f"Usage: python {os.path.basename(__file__)} recipe_1.yaml ...")
         sys.exit(1)
 
+    # i=ingredient, c=category, u=url
+    # TODO: csv files may contain error/bad formatted entries (ie. no int were int is ecpected); Check for consistency <05-01-2024>
+    icu_dict: dict[str, tuple[str, str]] = read_csv('res/ingredient_category_url.csv', to_int=False)
+    category_weights: dict[str, int] = read_csv('res/category_weights.csv', to_int=True)
+
     # Initialize a superlist to store ingredients from all files
     all_ingredients: list[Ingredient] = []
 
     # Iterate through command-line arguments starting from the second argument
+    # TODO: As exercise: parallelize reading from file <05-01-2024>
     for recipe_index in range(1, num_recipes):
         file_path = sys.argv[recipe_index]
 
-        ingredients: list[Ingredient] = read_ingredients(file_path)
+        ingredients: list[Ingredient] = build_ingredients(file_path, icu_dict, category_weights)
 
         all_ingredients.extend(ingredients)
         all_ingredients = sorted(all_ingredients,
