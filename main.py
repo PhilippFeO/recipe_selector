@@ -64,7 +64,28 @@ def main():
     # TODO: User might delete shopping list completly => [2:-1] becomes wrong <05-01-2024>
     final_ingredient_names: list[str] = awk_output.stdout.split('\n')[2:-1]
 
-    open_ingredient_urls(final_ingredient_names, icu_dict)
+    # Query user to add missing URLs for ingredients
+    ing_missing_url: list[str] = open_ingredient_urls(final_ingredient_names, icu_dict)
+    if ing_missing_url:
+        while True:
+            print("Do you want to instert missing links for the followin ingredients?\n")
+            join_str = '\t - '
+            list_ing_missing_url = join_str + join_str.join(ing_missing_url)
+            print(f'{list_ing_missing_url}\n')
+            user_input: str = input("yes/no: ").lower()
+
+            if user_input in {'yes', 'y'}:
+                join_str = ',DEFAULT,URL'
+                imu = join_str.join(ing_missing_url)
+                imu = f'{imu}{join_str}\n'
+                with open('./res/ingredient_category_url.csv', 'a') as icu_file:
+                    icu_file.write(imu)
+                subprocess.run([editor, './res/ingredient_category_url.csv'])
+                break
+            elif user_input in {'no', 'n'}:
+                break
+            else:
+                print("Invalid input. Please enter 'yes' or 'no'.")
 
 
 if __name__ == "__main__":
