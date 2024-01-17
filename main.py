@@ -21,7 +21,8 @@ def main():
 
     # i=ingredient, c=category, u=url
     # TODO: csv files may contain error/bad formatted entries (ie. no int were int is ecpected); Check for consistency <05-01-2024>
-    icu_dict: dict[str, tuple[str, str]] = read_csv('res/ingredient_category_url.csv', to_int=False)
+    icu_file: str = 'res/ingredient_category_url.csv'
+    icu_dict: dict[str, tuple[str, str]] = read_csv(icu_file, to_int=False)
     category_weights: dict[str, int] = read_csv('res/category_weights.csv', to_int=True)
 
     # Superlist to store ingredients from all files
@@ -61,7 +62,8 @@ def main():
     # awk adds '\n', hence there is an empty string entry on the last index
     # I dont know why awk does it and I dont care
     # list[str]!!! The edited table was splitted above and 'final_ingerdients' contains the names of the ingredients, not the objects!
-    # TODO: User might delete shopping list completly => [2:-1] becomes wrong <05-01-2024>
+    # TODO: User might delete shopping list completly => [2:-1] will return an empty list <05-01-2024>
+    # TODO: Consistency checks for the remaining lines <17-01-2024>
     final_ingredient_names: list[str] = awk_output.stdout.split('\n')[2:-1]
 
     # Query user to add missing URLs for ingredients
@@ -78,9 +80,9 @@ def main():
                 join_str = ',DEFAULT,URL'
                 imu = join_str.join(ing_missing_url)
                 imu = f'{imu}{join_str}\n'
-                with open('./res/ingredient_category_url.csv', 'a') as icu_file:
+                with open(icu_file, 'a') as icu_file:
                     icu_file.write(imu)
-                subprocess.run([editor, './res/ingredient_category_url.csv'])
+                subprocess.run([editor, icu_file])
                 break
             elif user_input in {'no', 'n'}:
                 break
