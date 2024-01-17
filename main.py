@@ -67,6 +67,7 @@ def main():
     final_ingredient_names: list[str] = awk_output.stdout.split('\n')[2:-1]
 
     # Query user to add missing URLs for ingredients
+    # Will insert CSV-stump (`imu`) and open $EDITOR
     ing_missing_url: list[str] = open_ingredient_urls(final_ingredient_names, icu_dict)
     if ing_missing_url:
         while True:
@@ -75,7 +76,6 @@ def main():
             list_ing_missing_url = join_str + join_str.join(ing_missing_url)
             print(f'{list_ing_missing_url}\n')
             user_input: str = input("yes/no: ").lower()
-
             if user_input in {'yes', 'y'}:
                 join_str = ',DEFAULT,URL'
                 imu = join_str.join(ing_missing_url)
