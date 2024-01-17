@@ -25,7 +25,7 @@ def build_ingredients(file_path: str,
     recipe_ingredients: list[Ingredient] = []
 
     # Build ingredients
-    # get() returns list of dicts resembling an ingredient as desfined in the corresponding yaml file
+    # get() returns list of dicts resembling an ingredient as defined in the corresponding yaml file
     ingredients: list[dict[str, str]] = recipe_data.get("ingredients", [])
     for ingredient in ingredients:
         # Retrive information from CSV files ('category', 'url' and 'category_weight')
@@ -60,7 +60,7 @@ def build_ingredients(file_path: str,
 
 
 if __name__ == "__main__":
-    file_path = "recipes/Spaghetti_mit_Gemüse.yml"
+    file_path = "recipes/Testgericht.yml"
     # i=ingredient, c=category, u=url
     icu_dict: dict[str, tuple[str, str]] = read_csv(icu_file, to_int=False)
     category_weights: dict[str, int] = read_csv(category_weights_file, to_int=True)
