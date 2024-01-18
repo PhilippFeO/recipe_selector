@@ -77,12 +77,18 @@ def main():
             print(f'{list_ing_missing_url}\n')
             user_input: str = input("yes/no: ").lower()
             if user_input in {'yes', 'y'}:
-                join_str = ',DEFAULT,URL'
+                join_str = ',CATEGORY,URL'
                 imu = join_str.join(ing_missing_url)
                 imu = f'{imu}{join_str}\n'
-                with open(icu_file, 'a') as icu_file:
-                    icu_file.write(imu)
-                subprocess.run([editor, icu_file])
+                # Add missing URLs with $EDITOR, append to `icu_file`
+                new_ing_url = '/tmp/new_ing_url.txt'
+                with open(new_ing_url, 'a') as f:
+                    f.write(imu)
+                subprocess.run([editor, new_ing_url])
+                with open(new_ing_url, 'r') as source_file:
+                    contents_to_append = source_file.read()
+                with open(icu_file, 'a') as destination:
+                    destination.write(contents_to_append)
                 break
             elif user_input in {'no', 'n'}:
                 break
