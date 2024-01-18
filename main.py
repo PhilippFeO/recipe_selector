@@ -67,50 +67,47 @@ def main():
     # TODO: Consistency checks for the remaining lines <17-01-2024>
     final_ingredient_names: list[str] = awk_output.stdout.split('\n')[2:-1]
 
+    # Check for missing URLs
+    urls, ing_miss_url = [], []
+    for ing_name in final_ingredient_names:
+        try:
+            urls.append(icu_dict[ing_name][1])
+        except KeyError:
+            print(f'Ingredient "{ing_name}" has no url.')
+            ing_miss_url.append(ing_name)
+
     # Query user to add missing URLs for ingredients
-    # Will insert CSV-stump (`imu`) and open $EDITOR
-    ing_missing_url: list[str] = open_ingredient_urls(final_ingredient_names, icu_dict)
-    if ing_missing_url:
+    if ing_miss_url:
         while True:
             print("Do you want to instert missing links for the followin ingredients?\n")
             join_str = '\t - '
-            list_ing_missing_url = join_str + join_str.join(ing_missing_url)
+            list_ing_missing_url = join_str + join_str.join(ing_miss_url)
             print(f'{list_ing_missing_url}\n')
             user_input: str = input("yes/no: ").lower()
             if user_input in {'yes', 'y'}:
                 join_str = ',CATEGORY,URL'
-                imu = join_str.join(ing_missing_url)
+                imu = join_str.join(ing_miss_url)
                 imu = f'{imu}{join_str}\n'
                 # Ask user for URL of every ingredient, append collected URLs to `icu_file`
-                urls: list[str] = []
-                for ing in ing_missing_url:
+                new_urls: list[str] = []
+                for ing in ing_miss_url:
                     url = input(f'URL of "{ing}": ')
-                    urls.append(url)
-                ing_url = list(zip(ing_missing_url, urls))
+                    new_urls.append(url)
+                ing_url: list[str, str] = list(zip(ing_miss_url, new_urls))
                 icu_entries = '\n'.join((f'{i},CATEGORY,{u}' for i, u in ing_url)) + '\n'
                 with open(icu_file, 'a') as f:
                     for i, u in ing_url:
                         f.write(icu_entries)
-                add_to_cart = True
-                break
-            elif user_input in {'no', 'n'}:
-                add_to_cart = False
-                break
-            else:
-                print("Invalid input. Please enter 'yes' or 'no'.")
-        # Ask user to add new items to cart
-        while add_to_cart:
-            user_input: str = input('Do you want to add these items to your cart?\n"yes/no": ')
-            if user_input in {'yes', 'y'}:
-                # This overly complex data structure is necessary to reuse `open_ingredient_urls()`
-                # TODO: Simplify <18-01-2024>
-                iu_dict: dict[str, str] = {i: [None, u] for i, u in ing_url}  # i=ingredient, u=url
-                _ = open_ingredient_urls(ing_missing_url, iu_dict)  # Should be emtpy anyway
+                urls.extend(new_urls)
                 break
             elif user_input in {'no', 'n'}:
                 break
             else:
                 print("Invalid input. Please enter 'yes' or 'no'.")
+    # Open firefox with specific profile
+    # subpress warnings
+    firefox = "firefox --profile /home/philipp/.mozilla/firefox/5mud7ety.Rewe"
+    subprocess.run([*firefox.split(' '), *urls], stderr=subprocess.DEVNULL)
 
 
 if __name__ == "__main__":
