@@ -122,7 +122,7 @@ def main():
                 print("Invalid input. Please enter 'yes' or 'no'.")
     # Open firefox with specific profile
     # subpress warnings
-    urls = (ing.url for ing in final_ingredients)
+    urls = tuple(ing.url for ing in final_ingredients)
     print()
     print(*urls, sep='\n')
     firefox = "firefox --profile /home/philipp/.mozilla/firefox/5mud7ety.Rewe"
