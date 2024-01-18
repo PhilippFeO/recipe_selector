@@ -19,6 +19,7 @@ def main():
             f"Usage: python {os.path.basename(__file__)} recipe_1.yaml ...")
         sys.exit(1)
 
+    new_ing_url = '/tmp/new_ing_url.txt'
     # i=ingredient, c=category, u=url
     # TODO: csv files may contain error/bad formatted entries (ie. no int were int is ecpected); Check for consistency <05-01-2024>
     icu_file: str = 'res/ingredient_category_url.csv'
@@ -80,15 +81,23 @@ def main():
                 join_str = ',CATEGORY,URL'
                 imu = join_str.join(ing_missing_url)
                 imu = f'{imu}{join_str}\n'
-                # Add missing URLs with $EDITOR, append to `icu_file`
-                new_ing_url = '/tmp/new_ing_url.txt'
-                with open(new_ing_url, 'a') as f:
-                    f.write(imu)
-                subprocess.run([editor, new_ing_url])
-                with open(new_ing_url, 'r') as source_file:
-                    contents_to_append = source_file.read()
-                with open(icu_file, 'a') as destination:
-                    destination.write(contents_to_append)
+                # Ask user for URL of every ingredient, append collected URLs to `icu_file`
+                urls: list[str] = []
+                for ing in ing_missing_url:
+                    url = input(f'URL of "{ing}": ')
+                    urls.append(url)
+                ing_url = list(zip(ing_missing_url, urls))
+                icu_entries = '\n'.join((f'{i},CATEGORY,{u}' for i, u in ing_url)) + '\n'
+                with open(icu_file, 'a') as f:
+                    for i, u in ing_url:
+                        f.write(icu_entries)
+                add_to_cart = True
+                break
+            elif user_input in {'no', 'n'}:
+                add_to_cart = False
+                break
+            else:
+                print("Invalid input. Please enter 'yes' or 'no'.")
                 break
             elif user_input in {'no', 'n'}:
                 break
