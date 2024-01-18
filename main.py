@@ -5,7 +5,6 @@ import subprocess
 from ingredient import Ingredient
 from read_ingredients import build_ingredients
 from read_csv import read_csv
-from open_urls import open_ingredient_urls
 
 
 def main():
@@ -20,7 +19,6 @@ def main():
             f"Usage: python {os.path.basename(__file__)} recipe_1.yaml ...")
         sys.exit(1)
 
-    new_ing_url = '/tmp/new_ing_url.txt'
     # i=ingredient, c=category, u=url
     # TODO: csv files may contain error/bad formatted entries (ie. no int were int is ecpected); Check for consistency <05-01-2024>
     icu_file: str = 'res/ingredient_category_url.csv'

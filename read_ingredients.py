@@ -7,7 +7,7 @@ from read_csv import read_csv
 #   Idea: Closure, ie. a function 'read_all_csvs' reads the csvs and returns the 'build_ingredient' function
 icu_file = 'res/ingredient_category_url.csv'
 category_weights_file = 'res/category_weights.csv'
-default_category = '-- fehlt --'
+default_category = '--fehlt--'
 
 
 def build_ingredients(file_path: str,
