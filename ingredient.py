@@ -38,7 +38,7 @@ class Ingredient:
         Format elements (field names, ingredient) as string for shopping list.
         """
         optional, name, quantity, category, meal = attributes
-        # Cap at _padding, no matter what (keep in mind when comosing a recipe)
+        # Cap at _padding, no matter what (keep in mind when compsing a recipe)
         pad = Ingredient._padding
         scw = Ingredient._space_column_width
         s = '?' if optional == '?' else '1' if optional else '•'
