@@ -1,4 +1,5 @@
 import sys
+import copy
 import os
 import subprocess
 from ingredient import Ingredient
@@ -55,8 +56,10 @@ def main():
 
     # Filter final ingredients (second column in 'shopping_list_file')
     # Dont hardcode column number, otherwise changes have to be adapted here again => annoying
+    # Keep "name" column and "quantity" column (the following one)
+    # Insert "•" as separator
     awk_output: str = subprocess.run(
-        ['awk', '-F', '   ', f'{{print ${Ingredient._name_col_num}}}', shopping_list_file],
+        ['awk', '-F', ' {2,}', f'{{print ${Ingredient._name_col_num}, "•", ${Ingredient._name_col_num + 1}}}', shopping_list_file],
         capture_output=True,
         text=True)
     # Firt two entries are "Name" and "" (empty line) due to header
@@ -66,6 +69,19 @@ def main():
     # TODO: User might delete shopping list completly => [2:-1] will return an empty list <05-01-2024>
     # TODO: Consistency checks for the remaining lines <17-01-2024>
     final_ingredient_names: list[str] = awk_output.stdout.split('\n')[2:-1]
+    # Transform list of "name • quantity" into list of tuples with (name, quantity) entries
+    ing_quant = ((i.strip(), q.strip()) for i, q in (fin.split('•') for fin in final_ingredient_names))
+    # Filter `all_ingredients` list to keep described by `final_ingredient_names`
+    #   "described" because `final_ingredient_names` holds only strings
+    final_ingredients = []
+    for i, q in ing_quant:
+        for ingredient in all_ingredients:
+            if ingredient.name == i and ingredient.quantity == q:
+                final_ingredients.append(ingredient)
+                break
+    # TODO: Use logging and/or print output for user <18-01-2024>
+    # TODO: When printing give user the chance to reedit list <18-01-2024>
+    print(*final_ingredients, sep='\n')
 
     # Check for missing URLs
     urls, ing_miss_url = [], []
@@ -107,7 +123,7 @@ def main():
     # Open firefox with specific profile
     # subpress warnings
     firefox = "firefox --profile /home/philipp/.mozilla/firefox/5mud7ety.Rewe"
-    subprocess.run([*firefox.split(' '), *urls], stderr=subprocess.DEVNULL)
+    # subprocess.run([*firefox.split(' '), *urls], stderr=subprocess.DEVNULL)
 
 
 if __name__ == "__main__":
