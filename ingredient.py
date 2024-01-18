@@ -8,6 +8,7 @@ class Ingredient:
     def __init__(self, name, quantity, optional=False,
                  category='',
                  category_weight=0,
+                 url='',
                  meal='Lakritz'):  # I hate it
         self.name = name
         self.quantity = str(quantity)  # 2 (pieces), 250g, 1 Block => string necessary
@@ -18,6 +19,7 @@ class Ingredient:
         # This key is also used for sorting the ingredients when generating the shopping list.
         # 0 is used, when category is missing in the according csv file (2024-01-05: res/category_weight.csv)
         self.category_weight = category_weight
+        self.url = url
         self.meal = meal
 
     def __str__(self):

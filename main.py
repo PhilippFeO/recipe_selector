@@ -1,5 +1,5 @@
 import sys
-import copy
+from typing import Generator
 import os
 import subprocess
 from ingredient import Ingredient
@@ -71,9 +71,9 @@ def main():
     final_ingredient_names: list[str] = awk_output.stdout.split('\n')[2:-1]
     # Transform list of "name • quantity" into list of tuples with (name, quantity) entries
     ing_quant = ((i.strip(), q.strip()) for i, q in (fin.split('•') for fin in final_ingredient_names))
-    # Filter `all_ingredients` list to keep described by `final_ingredient_names`
+    # Filter `all_ingredients` to keep described by `final_ingredient_names`
     #   "described" because `final_ingredient_names` holds only strings
-    final_ingredients = []
+    final_ingredients: list[Ingredient] = []
     for i, q in ing_quant:
         for ingredient in all_ingredients:
             if ingredient.name == i and ingredient.quantity == q:
@@ -81,40 +81,42 @@ def main():
                 break
     # TODO: Use logging and/or print output for user <18-01-2024>
     # TODO: When printing give user the chance to reedit list <18-01-2024>
+    print()
+    print("Final shopping list:")
+    print(f'{header}\n')
     print(*final_ingredients, sep='\n')
+    print()
 
     # Check for missing URLs
-    urls, ing_miss_url = [], []
-    for ing_name in final_ingredient_names:
+    ing_miss_url = []
+    for ingredient in final_ingredients:
+        ing_name = ingredient.name
         try:
-            urls.append(icu_dict[ing_name][1])
+            ingredient.url = icu_dict[ing_name][1]
         except KeyError:
-            print(f'Ingredient "{ing_name}" has no url.')
-            ing_miss_url.append(ing_name)
+            ing_miss_url.append(ingredient)
 
     # Query user to add missing URLs for ingredients
     if ing_miss_url:
         while True:
-            print("Do you want to instert missing links for the followin ingredients?\n")
+            print("Do you want to instert missing links for the following ingredients?\n")
+            ing_names_miss_url: Generator[str, None, None] = (f'{ing.name}\n' for ing in ing_miss_url)
             join_str = '\t - '
-            list_ing_missing_url = join_str + join_str.join(ing_miss_url)
-            print(f'{list_ing_missing_url}\n')
+            bullet_list_ing_miss_url: str = join_str + join_str.join(ing_names_miss_url)
+            print(f'{bullet_list_ing_miss_url}')
             user_input: str = input("yes/no: ").lower()
             if user_input in {'yes', 'y'}:
-                join_str = ',CATEGORY,URL'
-                imu = join_str.join(ing_miss_url)
-                imu = f'{imu}{join_str}\n'
                 # Ask user for URL of every ingredient, append collected URLs to `icu_file`
-                new_urls: list[str] = []
                 for ing in ing_miss_url:
-                    url = input(f'URL of "{ing}": ')
-                    new_urls.append(url)
-                ing_url: list[str, str] = list(zip(ing_miss_url, new_urls))
-                icu_entries = '\n'.join((f'{i},CATEGORY,{u}' for i, u in ing_url)) + '\n'
+                    ing.url = input(f'URL of "{ing.name}": ')
+                    # Default value if user entered now URL
+                    # TODO: Let user reedit list if URLs are still missing <18-01-2024>
+                    if ing.url == '':
+                        ing.url = '--url--'
+                # Now, all missing URLs were completed
+                icu_entries = '\n'.join((f'{ing.name},{ing.category},{ing.url}' for ing in ing_miss_url)) + '\n'
                 with open(icu_file, 'a') as f:
-                    for i, u in ing_url:
-                        f.write(icu_entries)
-                urls.extend(new_urls)
+                    f.write(icu_entries)
                 break
             elif user_input in {'no', 'n'}:
                 break
@@ -122,8 +124,11 @@ def main():
                 print("Invalid input. Please enter 'yes' or 'no'.")
     # Open firefox with specific profile
     # subpress warnings
+    urls = (ing.url for ing in final_ingredients)
+    print()
+    print(*urls, sep='\n')
     firefox = "firefox --profile /home/philipp/.mozilla/firefox/5mud7ety.Rewe"
-    # subprocess.run([*firefox.split(' '), *urls], stderr=subprocess.DEVNULL)
+    subprocess.run([*firefox.split(' '), *urls], stderr=subprocess.DEVNULL)
 
 
 if __name__ == "__main__":
