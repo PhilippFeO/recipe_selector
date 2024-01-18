@@ -98,6 +98,14 @@ def main():
                 break
             else:
                 print("Invalid input. Please enter 'yes' or 'no'.")
+        # Ask user to add new items to cart
+        while add_to_cart:
+            user_input: str = input('Do you want to add these items to your cart?\n"yes/no": ')
+            if user_input in {'yes', 'y'}:
+                # This overly complex data structure is necessary to reuse `open_ingredient_urls()`
+                # TODO: Simplify <18-01-2024>
+                iu_dict: dict[str, str] = {i: [None, u] for i, u in ing_url}  # i=ingredient, u=url
+                _ = open_ingredient_urls(ing_missing_url, iu_dict)  # Should be emtpy anyway
                 break
             elif user_input in {'no', 'n'}:
                 break
