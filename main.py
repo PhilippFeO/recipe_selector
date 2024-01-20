@@ -3,7 +3,6 @@ import os
 import subprocess
 from ingredient import Ingredient
 from build_ingredients import build_ingredients
-# from read_csv import read_csv
 from handle_ing_miss_url import handle_ing_miss_cu
 
 firefox_profile_path = os.path.expanduser('~/.mozilla/firefox/5mud7ety.Rewe')
@@ -55,10 +54,10 @@ def main():
     editor = os.environ['EDITOR']
     subprocess.run([editor, shopping_list_file])
 
-    # Filter final ingredients (second column in 'shopping_list_file')
+    # Filter final ingredients for `name` and `quantity`
     # Dont hardcode column number, otherwise changes have to be adapted here again => annoying
-    # Keep "name" column and "quantity" column (the following one)
-    # Insert "•" as separator
+    # Keep `name` column and `quantity` column (the following one)
+    # Insert `•` as separator
     awk_output: str = subprocess.run(
         ['awk', '-F', ' {2,}', f'{{print ${Ingredient._name_col_num}, "•", ${Ingredient._name_col_num + 1}}}', shopping_list_file],
         capture_output=True,
