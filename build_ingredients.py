@@ -3,14 +3,8 @@ import os
 from ingredient import Ingredient
 from read_csv import read_csv
 
-# TODO: Remove hardcoded file path <05-01-2024>
-#   Idea: Closure, ie. a function 'read_all_csvs' reads the csvs and returns the 'build_ingredient' function
-icu_file = 'res/ingredient_category_url.csv'
-# category_weights_file = 'res/category_weights.csv'
 
-
-def build_ingredients_from_csv(file_path: str,
-                               icu_dict: dict[str, tuple[str, str]]) -> tuple[list[Ingredient], list[Ingredient]]:
+def build_ingredients(recipe_file: str, icu_file: str) -> tuple[list[Ingredient], list[Ingredient]]:
     """
     Builds the ingredient list of a recipe by parsing the yaml file and adding
     the information from the corresponding CSV files, namely `category` and `url`.
@@ -21,17 +15,18 @@ def build_ingredients_from_csv(file_path: str,
     I know, there are other methods to store objects but Text (in comparison to binary) gives the user the opportunity to edit the data.
     Additionally, this surely becomes necessary because nobody can guarantee that an URL will stay valid. The vendor might change it.
     """
-    recipe_name = os.path.splitext(os.path.basename(file_path))[0].replace('_', ' ')
+    recipe_name = os.path.splitext(os.path.basename(recipe_file))[0].replace('_', ' ')
     recipe_data = None
-    with open(file_path, 'r') as file:
+    with open(recipe_file, 'r') as file:
         recipe_data = yaml.safe_load(file)
 
     recipe_ingredients: list[Ingredient] = []
-    ings_missing_cu = []
+    ings_missing_cu: list[Ingredient] = []
 
     # Build ingredients
     # get() returns list of dicts resembling an ingredient as defined in the corresponding yaml file
     ingredients: list[dict[str, str]] = recipe_data.get("ingredients", [])
+    icu_dict: dict[str, tuple[str, str]] = read_csv(icu_file)
     for ingredient in ingredients:
         # Retrive information from CSV files ('category', 'url' and 'category_weight')
         ingredient_name = ingredient['name']
@@ -61,9 +56,9 @@ def build_ingredients_from_csv(file_path: str,
 if __name__ == "__main__":
     file_path = "recipes/Testgericht.yml"
     # i=ingredient, c=category, u=url
-    icu_dict: dict[str, tuple[str, str]] = read_csv(icu_file, to_int=False)
-    # category_weights: dict[str, int] = read_csv(category_weights_file, to_int=True)
-    ingredients = build_ingredients_from_csv(file_path, icu_dict)
+    icu_file = 'res/ingredient_category_url.csv'
+    aicu_dict: dict[str, tuple[str, str]] = read_csv(icu_file, to_int=False)
+    ingredients = build_ingredients(file_path, aicu_dict)
 
     for i in ingredients:
         print(i)

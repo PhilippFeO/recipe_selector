@@ -2,8 +2,8 @@ import sys
 import os
 import subprocess
 from ingredient import Ingredient
-from read_ingredients import build_ingredients_from_csv
-from read_csv import read_csv
+from build_ingredients import build_ingredients
+# from read_csv import read_csv
 from handle_ing_miss_url import handle_ing_miss_cu
 
 firefox_profile_path = os.path.expanduser('~/.mozilla/firefox/5mud7ety.Rewe')
@@ -24,7 +24,6 @@ def main():
     # i=ingredient, c=category, u=url
     # TODO: csv files may contain error/bad formatted entries (ie. no int were int is ecpected); Check for consistency <05-01-2024>
     icu_file: str = 'res/ingredient_category_url.csv'
-    icu_dict: dict[str, tuple[str, str]] = read_csv(icu_file, to_int=False)
     # category_weights: dict[str, int] = read_csv('res/category_weights.csv', to_int=True)
 
     # Superlist to store ingredients from all files
@@ -33,11 +32,11 @@ def main():
     # Iterate through command-line arguments starting from the second argument
     # TODO: As exercise: parallelize reading/parsing the recipe.yaml <05-01-2024>
     for recipe_index in range(1, num_recipes):
-        file_path = sys.argv[recipe_index]
+        recipe_file = sys.argv[recipe_index]
 
         # `valid_ingredients` support `category` and `url`
         # `ings_missing_cu` miss `[c]ategory` and `[u]rl`
-        valid_ingredients, ings_missing_cu = build_ingredients_from_csv(file_path, icu_dict)
+        valid_ingredients, ings_missing_cu = build_ingredients(recipe_file, icu_file)
 
         all_valid_ingredients.extend(valid_ingredients)
         all_valid_ingredients = sorted(all_valid_ingredients,
