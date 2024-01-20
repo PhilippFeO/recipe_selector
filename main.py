@@ -6,6 +6,8 @@ from read_ingredients import build_ingredients
 from read_csv import read_csv
 from handle_ing_miss_url import retrieve_ing_miss_url, handle_ing_miss_url
 
+firefox_profile_path = os.path.expanduser('~/.mozilla/firefox/5mud7ety.Rewe')
+
 
 def main():
     """
@@ -95,7 +97,7 @@ def main():
 
     # Open firefox with specific profile
     # subpress warnings
-    firefox = "firefox --profile /home/philipp/.mozilla/firefox/5mud7ety.Rewe"
+    firefox = f"firefox --profile {firefox_profile_path}"
     subprocess.run([*firefox.split(' '), *urls], stderr=subprocess.DEVNULL)
 
 
