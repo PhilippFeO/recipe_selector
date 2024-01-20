@@ -4,14 +4,14 @@ import subprocess
 from ingredient import Ingredient
 from read_ingredients import build_ingredients
 from read_csv import read_csv
-from handle_ing_miss_url import retrieve_ing_miss_url, handle_ing_miss_cu
+from handle_ing_miss_url import handle_ing_miss_cu
 
 firefox_profile_path = os.path.expanduser('~/.mozilla/firefox/5mud7ety.Rewe')
 
 
 def main():
     """
-    This function is called via `python3 retrieve_ingredients recipe-1.yaml ...`. Hence, reading and checking `sys.argv`.
+    This function is called via `python3 main.py recipe-1.yaml ...`. Hence, reading and checking `sys.argv`.
     """
     num_recipes = len(sys.argv)
 
@@ -31,14 +31,12 @@ def main():
     all_valid_ingredients: list[Ingredient] = []
 
     # Iterate through command-line arguments starting from the second argument
-    # TODO: As exercise: parallelize reading from file <05-01-2024>
+    # TODO: As exercise: parallelize reading/parsing the recipe.yaml <05-01-2024>
     for recipe_index in range(1, num_recipes):
         file_path = sys.argv[recipe_index]
 
-        # ingredients: list[Ingredient] = build_ingredients(file_path, icu_dict, category_weights)
-        # `Ingredient`s may missing `category` and `url`
-        # ingredients: list[Ingredient] = build_ingredients(file_path, icu_dict)
-        # valid_ingredients: list[Ingredient], ings_missing_cu: list[Ingredient] =
+        # `valid_ingredients` support `category` and `url`
+        # `ings_missing_cu` miss `[c]ategory` and `[u]rl`
         valid_ingredients, ings_missing_cu = build_ingredients(file_path, icu_dict)
 
         all_valid_ingredients.extend(valid_ingredients)
@@ -46,8 +44,8 @@ def main():
                                        key=lambda ingredient: ingredient.category,
                                        reverse=True)
 
-    all_ingredients = valid_ingredients + ings_missing_cu
     # Write the shopping list
+    all_ingredients = valid_ingredients + ings_missing_cu
     shopping_list_file = 'shopping_list.txt'
     header = Ingredient.to_table_string()
     with open(shopping_list_file, 'w') as slf:
@@ -55,7 +53,7 @@ def main():
         slf.writelines((f"{ingredient}\n" for ingredient in all_ingredients))
 
     # Open shopping list in $EDITOR to modify it
-    # (some ingredients may already be in stock)
+    # (some ingredients may already be in stock, like salt)
     editor = os.environ['EDITOR']
     subprocess.run([editor, shopping_list_file])
 
@@ -76,7 +74,7 @@ def main():
     final_ingredient_names: list[str] = awk_output.stdout.split('\n')[2:-1]
     # Transform list of "name • quantity" into list of tuples with (name, quantity) entries
     ing_quant = ((i.strip(), q.strip()) for i, q in (fin.split('•') for fin in final_ingredient_names))
-    # Filter `all_ingredients` to keep described by `final_ingredient_names`
+    # Filter `all_ingredients` to keep described ones by `final_ingredient_names`
     #   "described" because `final_ingredient_names` holds only strings (and not `Ingredient`s)
     final_ingredients: list[Ingredient] = []
     for i, q in ing_quant:
@@ -91,8 +89,6 @@ def main():
     print(f'{header}\n')
     print(*final_ingredients, sep='\n')
     print()
-
-    # ing_miss_url = retrieve_ing_miss_url(final_ingredients, icu_dict)
 
     urls = handle_ing_miss_cu(ings_missing_cu,
                               final_ingredients,

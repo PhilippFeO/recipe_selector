@@ -17,8 +17,9 @@ def build_ingredients(file_path: str,
     Builds the ingredient list of a recipe by parsing the yaml file and adding
     the information from the corresponding CSV files, namely `category` and `url`.
 
-    If `Ingredient` is missing in `icu_dict` (and hence in `icu_file`), the user will be
-    asked to add these fields.
+    The function will return two lists, the first holding `Ingredient`s with valid `category` and `url` attributes, the latter with predefined ones.
+    This necessary to ask the user for completing the data.
+
     """
     recipe_name = os.path.splitext(os.path.basename(file_path))[0].replace('_', ' ')
     recipe_data = None
@@ -43,28 +44,10 @@ def build_ingredients(file_path: str,
         except KeyError:
             print(
                 f'Ingredient "{ingredient_name}" missing in "{icu_file}". Default value for <category> will be used.')
-            # category = default_category  # Because `category` is a mandatory argument of the constructor, it has to exists.
-            # url = default_url
-            # ing_missing_in_icu = True
             ings_missing_cu.append(
                 Ingredient(**ingredient,
                            meal=recipe_name))
             continue
-        # No ingredient => no category => no category_weight
-        # => Proceed if 'category' is a valid key
-        # if category != default_category:
-        #     try:
-        #         c_weight = category_weights[category]
-        #     except KeyError:
-        #         print(
-        #             f'Category "{category}" missing in "{category_weights_file}". Default value for <category_weight> will be used.')
-        #         c_weight = 0
-        # Build ingredient and insert into list
-        # if ing_missing_in_icu:
-        #     ings_missing_cu.append(
-        #         Ingredient(**ingredient,
-        #                    meal=recipe_name))
-        # else:
         recipe_ingredients.append(
             Ingredient(**ingredient,  # Only holds `name` and `quantity`
                        category=category,
