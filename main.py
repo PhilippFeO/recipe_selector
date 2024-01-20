@@ -24,7 +24,6 @@ def main():
     # i=ingredient, c=category, u=url
     # TODO: csv files may contain error/bad formatted entries (ie. no int were int is ecpected); Check for consistency <05-01-2024>
     icu_file: str = 'res/ingredient_category_url.csv'
-    # category_weights: dict[str, int] = read_csv('res/category_weights.csv', to_int=True)
 
     # Superlist to store ingredients from all files
     all_valid_ingredients: list[Ingredient] = []
