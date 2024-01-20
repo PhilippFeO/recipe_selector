@@ -18,26 +18,30 @@ def retrieve_ing_miss_url(final_ingredients: list[Ingredient],
     return ing_miss_url
 
 
-def query_for_url(ing_miss_url: list[Ingredient],
+def query_for_url(ings_miss_cu: list[Ingredient],
                   icu_file: str):
     """
     Ask user for URL of every `Ingredient` in `ing_miss_url`, append collected URLs to `icu_file` ([i]ngredient, [c]ategory, [u]rl).
     """
-    for ing in ing_miss_url:
-        ing.url = input(f'URL of "{ing.name}": ')
-        # Default value if user entered now URL
-        # TODO: Let user reedit list if URLs are still missing <18-01-2024>
-        if ing.url == '':
-            ing.url = '--url--'
+    for ing in ings_miss_cu:
+        c = input(f'Category of "{ing.name}": ')
+        # Only change `category` if there was a "real" input ("real" == "not empty")
+        # Otherwise, `category` keeps the default value set in the constructor
+        if c != '':
+            ing.category = c
+        # Same with url
+        u = input(f'URL of "{ing.name}": ')
+        if u != '':
+            ing.url = u
     # Now, all missing URLs were completed
-    icu_entries = '\n'.join((f'{ing.name},{ing.category},{ing.url}' for ing in ing_miss_url)) + '\n'
+    icu_entries = '\n'.join((f'{ing.name},{ing.category},{ing.url}' for ing in ings_miss_cu)) + '\n'
     with open(icu_file, 'a') as f:
         f.write(icu_entries)
 
 
-def handle_ing_miss_url(ing_miss_url: list[Ingredient],
-                        final_ingredients: list[Ingredient],
-                        icu_file: str) -> list[str]:
+def handle_ing_miss_cu(ings_miss_cu: list[Ingredient],
+                       final_ingredients: list[Ingredient],
+                       icu_file: str) -> list[str]:
     """
     Initial query to give the opportunity to add URLs to the `Ingredient`s in `ing_miss_url`.
     The `Ingredient`s are listed before user input is parsed. After all URLs were collected,
@@ -45,16 +49,16 @@ def handle_ing_miss_url(ing_miss_url: list[Ingredient],
 
     The list of the missing URLs is returned.
     """
-    if ing_miss_url:
+    if ings_miss_cu:
         while True:
-            print("Do you want to instert missing links for the following ingredients?\n")
-            ing_names_miss_url: Generator[str, None, None] = (f'{ing.name}\n' for ing in ing_miss_url)
+            print("Do you want to add the missing `category` and `url` for the following ingredients?\n")
+            ing_names_miss_url: Generator[str, None, None] = (f'{ing.name}\n' for ing in ings_miss_cu)
             join_str = '\t - '
             bullet_list_ing_miss_url: str = join_str + join_str.join(ing_names_miss_url)
             print(f'{bullet_list_ing_miss_url}')
             user_input: str = input("yes/no: ").lower()
             if user_input in {'yes', 'y'}:
-                query_for_url(ing_miss_url,
+                query_for_url(ings_miss_cu,
                               icu_file)
                 break
             elif user_input in {'no', 'n'}:

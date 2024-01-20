@@ -4,7 +4,7 @@ import subprocess
 from ingredient import Ingredient
 from read_ingredients import build_ingredients
 from read_csv import read_csv
-from handle_ing_miss_url import retrieve_ing_miss_url, handle_ing_miss_url
+from handle_ing_miss_url import retrieve_ing_miss_url, handle_ing_miss_cu
 
 firefox_profile_path = os.path.expanduser('~/.mozilla/firefox/5mud7ety.Rewe')
 
@@ -25,23 +25,28 @@ def main():
     # TODO: csv files may contain error/bad formatted entries (ie. no int were int is ecpected); Check for consistency <05-01-2024>
     icu_file: str = 'res/ingredient_category_url.csv'
     icu_dict: dict[str, tuple[str, str]] = read_csv(icu_file, to_int=False)
-    category_weights: dict[str, int] = read_csv('res/category_weights.csv', to_int=True)
+    # category_weights: dict[str, int] = read_csv('res/category_weights.csv', to_int=True)
 
     # Superlist to store ingredients from all files
-    all_ingredients: list[Ingredient] = []
+    all_valid_ingredients: list[Ingredient] = []
 
     # Iterate through command-line arguments starting from the second argument
     # TODO: As exercise: parallelize reading from file <05-01-2024>
     for recipe_index in range(1, num_recipes):
         file_path = sys.argv[recipe_index]
 
-        ingredients: list[Ingredient] = build_ingredients(file_path, icu_dict, category_weights)
+        # ingredients: list[Ingredient] = build_ingredients(file_path, icu_dict, category_weights)
+        # `Ingredient`s may missing `category` and `url`
+        # ingredients: list[Ingredient] = build_ingredients(file_path, icu_dict)
+        # valid_ingredients: list[Ingredient], ings_missing_cu: list[Ingredient] =
+        valid_ingredients, ings_missing_cu = build_ingredients(file_path, icu_dict)
 
-        all_ingredients.extend(ingredients)
-        all_ingredients = sorted(all_ingredients,
-                                 key=lambda ingredient: ingredient.category_weight,
-                                 reverse=True)
+        all_valid_ingredients.extend(valid_ingredients)
+        all_valid_ingredients = sorted(all_valid_ingredients,
+                                       key=lambda ingredient: ingredient.category,
+                                       reverse=True)
 
+    all_ingredients = valid_ingredients + ings_missing_cu
     # Write the shopping list
     shopping_list_file = 'shopping_list.txt'
     header = Ingredient.to_table_string()
@@ -72,7 +77,7 @@ def main():
     # Transform list of "name • quantity" into list of tuples with (name, quantity) entries
     ing_quant = ((i.strip(), q.strip()) for i, q in (fin.split('•') for fin in final_ingredient_names))
     # Filter `all_ingredients` to keep described by `final_ingredient_names`
-    #   "described" because `final_ingredient_names` holds only strings
+    #   "described" because `final_ingredient_names` holds only strings (and not `Ingredient`s)
     final_ingredients: list[Ingredient] = []
     for i, q in ing_quant:
         for ingredient in all_ingredients:
@@ -87,11 +92,11 @@ def main():
     print(*final_ingredients, sep='\n')
     print()
 
-    ing_miss_url = retrieve_ing_miss_url(final_ingredients, icu_dict)
+    # ing_miss_url = retrieve_ing_miss_url(final_ingredients, icu_dict)
 
-    urls = handle_ing_miss_url(ing_miss_url,
-                               final_ingredients,
-                               icu_file)
+    urls = handle_ing_miss_cu(ings_missing_cu,
+                              final_ingredients,
+                              icu_file)
     print()
     print(*urls, sep='\n')
 
