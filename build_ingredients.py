@@ -7,12 +7,10 @@ from read_csv import read_csv
 #   Idea: Closure, ie. a function 'read_all_csvs' reads the csvs and returns the 'build_ingredient' function
 icu_file = 'res/ingredient_category_url.csv'
 # category_weights_file = 'res/category_weights.csv'
-default_category = '--CATEGORY--'
-default_url = '--URL--'
 
 
-def build_ingredients(file_path: str,
-                      icu_dict: dict[str, tuple[str, str]]) -> tuple[list[Ingredient], list[Ingredient]]:
+def build_ingredients_from_csv(file_path: str,
+                               icu_dict: dict[str, tuple[str, str]]) -> tuple[list[Ingredient], list[Ingredient]]:
     """
     Builds the ingredient list of a recipe by parsing the yaml file and adding
     the information from the corresponding CSV files, namely `category` and `url`.
@@ -20,6 +18,8 @@ def build_ingredients(file_path: str,
     The function will return two lists, the first holding `Ingredient`s with valid `category` and `url` attributes, the latter with predefined ones.
     This necessary to ask the user for completing the data.
 
+    I know, there are other methods to store objects but Text (in comparison to binary) gives the user the opportunity to edit the data.
+    Additionally, this surely becomes necessary because nobody can guarantee that an URL will stay valid. The vendor might change it.
     """
     recipe_name = os.path.splitext(os.path.basename(file_path))[0].replace('_', ' ')
     recipe_data = None
@@ -63,7 +63,7 @@ if __name__ == "__main__":
     # i=ingredient, c=category, u=url
     icu_dict: dict[str, tuple[str, str]] = read_csv(icu_file, to_int=False)
     # category_weights: dict[str, int] = read_csv(category_weights_file, to_int=True)
-    ingredients = build_ingredients(file_path, icu_dict)
+    ingredients = build_ingredients_from_csv(file_path, icu_dict)
 
     for i in ingredients:
         print(i)

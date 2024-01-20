@@ -2,7 +2,7 @@ import sys
 import os
 import subprocess
 from ingredient import Ingredient
-from read_ingredients import build_ingredients
+from read_ingredients import build_ingredients_from_csv
 from read_csv import read_csv
 from handle_ing_miss_url import handle_ing_miss_cu
 
@@ -37,7 +37,7 @@ def main():
 
         # `valid_ingredients` support `category` and `url`
         # `ings_missing_cu` miss `[c]ategory` and `[u]rl`
-        valid_ingredients, ings_missing_cu = build_ingredients(file_path, icu_dict)
+        valid_ingredients, ings_missing_cu = build_ingredients_from_csv(file_path, icu_dict)
 
         all_valid_ingredients.extend(valid_ingredients)
         all_valid_ingredients = sorted(all_valid_ingredients,
