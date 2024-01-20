@@ -1,10 +1,10 @@
 import sys
-from typing import Generator
 import os
 import subprocess
 from ingredient import Ingredient
 from read_ingredients import build_ingredients
 from read_csv import read_csv
+from handle_ing_miss_url import retrieve_ing_miss_url, handle_ing_miss_url
 
 
 def main():
@@ -85,46 +85,16 @@ def main():
     print(*final_ingredients, sep='\n')
     print()
 
-    # Check for missing URLs
-    ing_miss_url = []
-    for ingredient in final_ingredients:
-        ing_name = ingredient.name
-        try:
-            ingredient.url = icu_dict[ing_name][1]
-        except KeyError:
-            ing_miss_url.append(ingredient)
+    ing_miss_url = retrieve_ing_miss_url(final_ingredients, icu_dict)
 
-    # Query user to add missing URLs for ingredients
-    if ing_miss_url:
-        while True:
-            print("Do you want to instert missing links for the following ingredients?\n")
-            ing_names_miss_url: Generator[str, None, None] = (f'{ing.name}\n' for ing in ing_miss_url)
-            join_str = '\t - '
-            bullet_list_ing_miss_url: str = join_str + join_str.join(ing_names_miss_url)
-            print(f'{bullet_list_ing_miss_url}')
-            user_input: str = input("yes/no: ").lower()
-            if user_input in {'yes', 'y'}:
-                # Ask user for URL of every ingredient, append collected URLs to `icu_file`
-                for ing in ing_miss_url:
-                    ing.url = input(f'URL of "{ing.name}": ')
-                    # Default value if user entered now URL
-                    # TODO: Let user reedit list if URLs are still missing <18-01-2024>
-                    if ing.url == '':
-                        ing.url = '--url--'
-                # Now, all missing URLs were completed
-                icu_entries = '\n'.join((f'{ing.name},{ing.category},{ing.url}' for ing in ing_miss_url)) + '\n'
-                with open(icu_file, 'a') as f:
-                    f.write(icu_entries)
-                break
-            elif user_input in {'no', 'n'}:
-                break
-            else:
-                print("Invalid input. Please enter 'yes' or 'no'.")
-    # Open firefox with specific profile
-    # subpress warnings
-    urls = tuple(ing.url for ing in final_ingredients)
+    urls = handle_ing_miss_url(ing_miss_url,
+                               final_ingredients,
+                               icu_file)
     print()
     print(*urls, sep='\n')
+
+    # Open firefox with specific profile
+    # subpress warnings
     firefox = "firefox --profile /home/philipp/.mozilla/firefox/5mud7ety.Rewe"
     subprocess.run([*firefox.split(' '), *urls], stderr=subprocess.DEVNULL)
 
