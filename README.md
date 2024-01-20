@@ -19,7 +19,7 @@ preparation:
     ...
 ```
 3. Start `./select_recipes.sh`
-4. The programm will parse the randomly chosen recipes. If it can't find an URL for the specific `Ingredient`, it will ask you to manually add one via the command line. The submitted links are saved and reused separately from the recipe. <!-- TODO: Dadurch muss man bei Änderungen nur an einer Stelle schrauben und nicht in allen Rezepten. Außerdem kann man so schneller Rezepte notieren. <20-01-2024> --> <!-- TODO: Datei generieren, falls sie nicht existiert <20-01-2024> -->
+4. The programm will parse the randomly chosen recipes. If it can't find an URL for the specific `Ingredient`, it will ask you to manually add one via the command line. The submitted links are saved and reused separately from the recipe. <!-- TODO: Dadurch muss man bei Änderungen nur an einer Stelle schrauben und nicht in allen Rezepten. Außerdem kann man so schneller Rezepte notieren. <20-01-2024> -->
 5. After all URLs were collected, Firefox opens the URLs in tabs using your new profile.
 
 ---
