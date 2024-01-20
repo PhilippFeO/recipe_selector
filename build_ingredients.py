@@ -15,18 +15,26 @@ def build_ingredients(recipe_file: str, icu_file: str) -> tuple[list[Ingredient]
     I know, there are other methods to store objects but Text (in comparison to binary) gives the user the opportunity to edit the data.
     Additionally, this surely becomes necessary because nobody can guarantee that an URL will stay valid. The vendor might change it.
     """
+    # basename provides file name, splittext separates name and extension, [0] uses plain file name
+    # TODO: Add 'recipe: RECIPENAME' key to every recipe to avoid this ugly line of code <05-01-2024>
     recipe_name = os.path.splitext(os.path.basename(recipe_file))[0].replace('_', ' ')
     recipe_data = None
     with open(recipe_file, 'r') as file:
         recipe_data = yaml.safe_load(file)
 
     recipe_ingredients: list[Ingredient] = []
+    # User will be asked to provide `[c]ategory` and `[u]rl`
     ings_missing_cu: list[Ingredient] = []
 
     # Build ingredients
     # get() returns list of dicts resembling an ingredient as defined in the corresponding yaml file
     ingredients: list[dict[str, str]] = recipe_data.get("ingredients", [])
-    icu_dict: dict[str, tuple[str, str]] = read_csv(icu_file)
+    icu_dict: dict[str, tuple[str, str]] = {}
+    try:
+        icu_dict = read_csv(icu_file)
+    except FileNotFoundError:
+        # File will be created in the following, s. handle_ing_miss_url.py
+        pass
     for ingredient in ingredients:
         # Retrive information from CSV files ('category', 'url' and 'category_weight')
         ingredient_name = ingredient['name']
@@ -47,8 +55,6 @@ def build_ingredients(recipe_file: str, icu_file: str) -> tuple[list[Ingredient]
             Ingredient(**ingredient,  # Only holds `name` and `quantity`
                        category=category,
                        url=url,
-                       # basename provides file name, splittext separates name and extension, [0] uses plain file name
-                       # TODO: Add 'recipe: RECIPENAME' key to every recipe to avoid this ugly line of code <05-01-2024>
                        meal=recipe_name))
     return recipe_ingredients, ings_missing_cu
 
