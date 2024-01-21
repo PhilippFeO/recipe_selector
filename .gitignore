@@ -1,6 +1,6 @@
 __pycache__
 shopping_list.txt
-TODO.md
+todo.md
 *.csv
 *.yaml
 hooks/
