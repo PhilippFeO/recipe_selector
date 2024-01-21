@@ -2,3 +2,4 @@ __pycache__
 shopping_list.txt
 TODO.md
 *.csv
+*.yaml
