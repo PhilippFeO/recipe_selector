@@ -19,8 +19,11 @@ preparation:
     ...
 ```
 3. Start `./select_recipes.sh`
-4. The programm will parse the randomly chosen recipes. If it can't find an URL for the specific `Ingredient`, it will ask you to manually add one via the command line. The submitted links are saved and reused separately from the recipe. <!-- TODO: Dadurch muss man bei Änderungen nur an einer Stelle schrauben und nicht in allen Rezepten. Außerdem kann man so schneller Rezepte notieren. <20-01-2024> -->
+4. The programm will parse the randomly chosen recipes. If it can't find an URL for the specific `Ingredient`, it will ask you to manually add one via the command line. The submitted links are saved and reused separately from the recipe. 
 5. After all URLs were collected, Firefox opens the URLs in tabs using your new profile.
+
+### Some thoughts on 4.
+It is also possible to provide the URL as a field (`url`) in the `yaml` of the recipe but then we have to provide the URL each time using the `Ingredient`. By having a separate file storing `Ingredient.name` (`.name` since only the string is used in this case) and it's URL, we have one source of truth. This is quite handy if URLs change, because then we have to edit it once and not across each recipe. The combination is saved under `res/ingredient_category_url.csv`. Having plain text/csv and no binary gives us the opportunity to easily make changes afterwards. An additional benefit is that this speeds up creating a new recipe since most `Ingredient`s are already provided with an URL and wo don't have to insert the same information again and again.
 
 ## Syntax completion for Neovim
 - I have written a source for Neovim, ie. [nvim-cmp](https://github.com/hrsh7th/nvim-cmp) which completes the ingredients. You can find it in my Repos or [here](https://github.com/PhilippFeO/cmp-csv). Having syntax completion provides you from typos, duplication and remembering which `Ingredient` is already with URL available.
