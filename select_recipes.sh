@@ -21,7 +21,7 @@ if [ -d "$recipes" ]; then
     # Get the number of files in the directory
     if [ $# -ne 1 ]; then
         echo "Usage: ./recipe_selector.sh N"
-        echo -e "\twhere 0 < N < $num_files (Number of Recipes)"
+        echo -e "\twhere 0 < N <= $num_files (Number of Recipes)"
         exit 1
     fi
 
