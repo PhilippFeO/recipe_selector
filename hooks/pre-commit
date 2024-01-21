@@ -1,0 +1,9 @@
+#!/bin/bash
+
+current_branch=$(git branch --show-current)
+main="main"
+
+if [[ "$current_branch" == "$main" ]]; then
+    echo "Commits on "$main" are not allowed. Introduce new features by merging with corresponding feature branches. This is a precaution to avoid merge conflicts on the user side which might happen after a 'git push --force-with-lease', which I regularly use."
+    exit 1
+fi
