@@ -6,7 +6,7 @@ Clone the git repository (wherever you like):
 ```sh
 git clone https://github.com/PhilippFeO/recipe_selector
 ```
-Starting point is the script [`select_recipes.sh`](./select_recipes.sh).
+make [`select_recipes.sh`](./select_recipes.sh) executable via `chmod +x select_recipes.sh` and go.
 
 ## How it works
 1. Create a firefox profile for grocery shopping only [1].  
