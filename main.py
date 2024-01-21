@@ -69,7 +69,7 @@ def main():
     # TODO: User might delete shopping list completly => [2:-1] will return an empty list <05-01-2024>
     # TODO: Consistency checks for the remaining lines <17-01-2024>
     final_ingredient_names: list[str] = awk_output.stdout.split('\n')[2:-1]
-    # Transform list of "name • quantity" into list of tuples with (name, quantity) entries
+    # Transform list of "name • quantity"-strings into list of tuples with (name, quantity) entries
     ing_quant = ((i.strip(), q.strip()) for i, q in (fin.split('•') for fin in final_ingredient_names))
     # Filter `all_ingredients` to keep described ones by `final_ingredient_names`
     #   "described" because `final_ingredient_names` holds only strings (and not `Ingredient`s)
