@@ -1,10 +1,17 @@
 # Recipe Selector #
 No "What should I eat for dinner today?" and manually buying ever again! Recipes are selected randomly and a firefox instance will open to buy the necessary ingredients online[^1] – Deciding and grocery shopping in one step!
 
+## Installation
+Clone the git repository (wherever you like):
+```sh
+git clone https://github.com/PhilippFeO/recipe_selector
+```
+Starting point is the script [`select_recipes.sh`](./select_recipes.sh).
+
 ## How it works
 1. Create a firefox profile for grocery shopping only [1].  
-    1.1. Insert the path in `main.py`. The variable is the topmost (after the `import` section). <!-- TODO: Background: By using a distings profile, one can keep cookies and login information. The program also won't interfere with your default browser progile you are using on a daily basis. <20-01-2024> -->
-2. Place your recipes as `yaml` file in a `recipes/` folder (you may create one). (Disclaimer: This is subject to change in the near future.)  
+    1.1. Insert the path in `main.py`. The variable is the topmost after the `import` section. (Background: By using a distings profile, one can keep cookies and login information. The program also won't interfere with your default browser profile you are using on a daily basis.)
+2. Place your recipes as `yaml` files in a `recipes/` folder (you may create one). (Disclaimer: This is subject to change in the near future.)  
     2.1. Your recipe should have the following structure:  
 ```yaml
 ingredients:
