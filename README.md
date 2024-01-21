@@ -22,6 +22,9 @@ preparation:
 4. The programm will parse the randomly chosen recipes. If it can't find an URL for the specific `Ingredient`, it will ask you to manually add one via the command line. The submitted links are saved and reused separately from the recipe. <!-- TODO: Dadurch muss man bei Änderungen nur an einer Stelle schrauben und nicht in allen Rezepten. Außerdem kann man so schneller Rezepte notieren. <20-01-2024> -->
 5. After all URLs were collected, Firefox opens the URLs in tabs using your new profile.
 
+## Syntax completion for Neovim
+- I have written a source for Neovim, ie. [nvim-cmp](https://github.com/hrsh7th/nvim-cmp) which completes the ingredients. You can find it in my Repos or [here](https://github.com/PhilippFeO/cmp-csv). Having syntax completion provides you from typos, duplication and remembering which `Ingredient` is already with URL available.
+
 ---
 
 [1]: If you don't know how to create a new profile, check: https://support.mozilla.org/en-US/kb/profile-manager-create-remove-switch-firefox-profiles?redirectslug=profile-manager-create-and-remove-firefox-profiles&redirectlocale=en-US Keep in mind, that this profile is automatically the default one. So, you have to select your previous profile as standard afterwards. The directory of the profile(s) are also listed on this page. Just copy and paste.
