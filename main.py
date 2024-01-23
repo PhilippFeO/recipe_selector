@@ -38,7 +38,7 @@ def main():
 
         all_valid_ingredients.extend(valid_ingredients)
         all_valid_ingredients = sorted(all_valid_ingredients,
-                                       key=lambda ingredient: ingredient.category,
+                                       key=lambda ingredient: ingredient.meal,
                                        reverse=True)
 
     # Write the shopping list
