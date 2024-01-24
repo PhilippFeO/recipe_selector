@@ -25,7 +25,8 @@ def main():
     icu_file: str = 'res/ingredient_category_url.csv'
 
     # Superlist to store ingredients from all files
-    all_valid_ingredients: list[Ingredient] = []
+    all_ingredients: list[Ingredient] = []
+    all_ings_missing_cu: list[Ingredient] = []
 
     # Iterate through command-line arguments starting from the second argument
     # TODO: As exercise: parallelize reading/parsing the recipe.yaml <05-01-2024>
@@ -34,15 +35,16 @@ def main():
 
         # `valid_ingredients` support `category` and `url`
         # `ings_missing_cu` miss `[c]ategory` and `[u]rl`
+        # TODO: `valid_ingredients` is used only here. Maybe returning all ingredients with the first and ings_miss_cu with the second argument <24-01-2024>
         valid_ingredients, ings_missing_cu = build_ingredients(recipe_file, icu_file)
+        # print(f"{ings_missing_cu = }")
 
-        all_valid_ingredients.extend(valid_ingredients)
-        all_valid_ingredients = sorted(all_valid_ingredients,
-                                       key=lambda ingredient: ingredient.meal,
-                                       reverse=True)
+        all_ings_missing_cu.extend(ings_missing_cu)
+        all_ingredients.extend(sorted(valid_ingredients + ings_missing_cu,
+                                      key=lambda ingredient: ingredient.name))
 
     # Write the shopping list
-    all_ingredients = valid_ingredients + ings_missing_cu
+    print([ing.name for ing in all_ingredients])
     shopping_list_file = 'shopping_list.txt'
     header = Ingredient.to_table_string()
     with open(shopping_list_file, 'w') as slf:
@@ -87,7 +89,7 @@ def main():
     print(*final_ingredients, sep='\n')
     print()
 
-    urls = handle_ing_miss_cu(ings_missing_cu,
+    urls = handle_ing_miss_cu(all_ings_missing_cu,
                               final_ingredients,
                               icu_file)
     print()
@@ -96,6 +98,7 @@ def main():
     # Open firefox with specific profile
     # subpress warnings
     firefox = f"firefox --profile {firefox_profile_path}"
+    subprocess.run([editor, shopping_list_file])
     subprocess.run([*firefox.split(' '), *urls], stderr=subprocess.DEVNULL)
 
 
