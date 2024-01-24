@@ -6,10 +6,10 @@ class Ingredient:
     _space_column_width = 3
 
     def __init__(self, name, quantity, optional=False,
-                 category='--CATEGORY--',
+                 category='N/A-CATEGORY',
                  category_weight=0,
-                 url='--URL--',
-                 meal='Lakritz'):  # I hate it
+                 url='N/A-URL',
+                 meal='N/A-MEAL'):  # I hate it
         self.name = name
         self.quantity = str(quantity)  # 2 (pieces), 250g, 1 Block => string necessary
         self.optional = optional
