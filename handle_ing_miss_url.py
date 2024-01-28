@@ -32,16 +32,17 @@ def handle_ing_miss_cu(ings_miss_cu: list[Ingredient],
 
     The list of **all** URLs is returned.
     """
+    intersection = set(ings_miss_cu) & set(final_ingredients)
     if ings_miss_cu:
         while True:
             print("Do you want to add the missing `category` and `url` for the following ingredients?\n")
-            ing_names_miss_url: Generator[str, None, None] = (f'{ing.name}\n' for ing in ings_miss_cu)
+            ing_names_miss_url: Generator[str, None, None] = (f'{ing.name}\n' for ing in intersection)
             join_str = '\t - '
             bullet_list_ing_miss_url: str = join_str + join_str.join(ing_names_miss_url)
             print(f'{bullet_list_ing_miss_url}')
             user_input: str = input("yes/no: ").lower()
             if user_input in {'yes', 'y'}:
-                query_for_url(ings_miss_cu,
+                query_for_url(intersection,
                               icu_file)
                 break
             elif user_input in {'no', 'n'}:
