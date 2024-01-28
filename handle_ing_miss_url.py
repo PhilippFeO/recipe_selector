@@ -33,7 +33,7 @@ def handle_ing_miss_cu(ings_miss_cu: list[Ingredient],
     The list of **all** URLs is returned.
     """
     intersection = set(ings_miss_cu) & set(final_ingredients)
-    if ings_miss_cu:
+    if intersection:
         while True:
             print("Do you want to add the missing `category` and `url` for the following ingredients?\n")
             ing_names_miss_url: Generator[str, None, None] = (f'{ing.name}\n' for ing in intersection)
