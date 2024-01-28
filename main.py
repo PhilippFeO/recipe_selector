@@ -44,7 +44,6 @@ def main():
                                       key=lambda ingredient: ingredient.name))
 
     # Write the shopping list
-    print([ing.name for ing in all_ingredients])
     shopping_list_file = 'shopping_list.txt'
     header = Ingredient.to_table_string()
     with open(shopping_list_file, 'w') as slf:
@@ -83,11 +82,9 @@ def main():
                 break
     # TODO: Use logging and/or print output for user <18-01-2024>
     # TODO: When printing give user the chance to reedit list <18-01-2024>
-    print()
-    print("Final shopping list:")
-    print(f'{header}\n')
-    print(*final_ingredients, sep='\n')
-    print()
+    print("\nFinal shopping list:")
+    ingredients_table = [f'{header}\n', *final_ingredients]
+    print(*ingredients_table, sep='\n', end='\n')
 
     urls = handle_ing_miss_cu(all_ings_missing_cu,
                               final_ingredients,
@@ -98,7 +95,7 @@ def main():
     # Open firefox with specific profile
     # subpress warnings
     firefox = f"firefox --profile {firefox_profile_path}"
-    subprocess.run([editor, shopping_list_file])
+    # subprocess.run([editor, shopping_list_file])
     subprocess.run([*firefox.split(' '), *urls], stderr=subprocess.DEVNULL)
 
 
