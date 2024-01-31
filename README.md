@@ -9,10 +9,10 @@ git clone https://github.com/PhilippFeO/recipe_selector
 make [`select_recipes.sh`](./select_recipes.sh) executable via `chmod +x select_recipes.sh` and go.
 
 ## How it works
-1. Create a firefox profile for grocery shopping only [1].  
+1. Create a firefox profile for grocery shopping only [1].
     1.1. Insert the path in `main.py`. The variable is the topmost after the `import` section. (Background: By using a distings profile, one can keep cookies and login information. The program also won't interfere with your default browser profile you are using on a daily basis.)
 2. Place your recipes as `yaml` files in a `recipes/` folder (you may create one). (Disclaimer: This is subject to change in the near future.)  
-    2.1. Your recipe should have the following structure:  
+    2.1. Your recipe should have the following structure:
 ```yaml
 ingredients:
     - name: Spaghetti
