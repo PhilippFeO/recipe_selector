@@ -4,6 +4,7 @@ import subprocess
 from ingredient import Ingredient
 from build_ingredients import build_ingredients
 from handle_ing_miss_url import handle_ing_miss_cu
+from archive_contents import archive_contents
 
 firefox_profile_path = os.path.expanduser('~/.mozilla/firefox/5mud7ety.Rewe')
 
@@ -83,14 +84,22 @@ def main():
     # TODO: Use logging and/or print output for user <18-01-2024>
     # TODO: When printing give user the chance to reedit list <18-01-2024>
     print("\nFinal shopping list:")
-    ingredients_table = [f'{header}\n', *final_ingredients]
-    print(*ingredients_table, sep='\n', end='\n')
+    # ingredients_table = [f'{header}\n', *final_ingredients]
+    # print(*ingredients_table, sep='\n', end='\n')
+    print(f'{header}\n', *final_ingredients, sep='\n', end='\n')
+
+    # Archive shopping list and recipes
+    archive_contents(shopping_list_file, sys.argv[1:])
+
+    # Copy shopping_list_file to dir 'selection'
+    # hard link recipes
+    # TODO: Hard link PDFs <31-01-2024>
 
     urls = handle_ing_miss_cu(all_ings_missing_cu,
                               final_ingredients,
                               icu_file)
-    print()
-    print(*urls, sep='\n')
+    # print()
+    # print(*urls, sep='\n')
 
     # Open firefox with specific profile
     # subpress warnings
