@@ -7,15 +7,13 @@ from handle_ing_miss_url import handle_ing_miss_cu
 from archive_contents import archive_contents
 import logging
 
+firefox_profile_path = os.path.expanduser('~/.mozilla/firefox/5mud7ety.Rewe')
 
-# Standard ist logging.WARNING, INFO ist aber niedriger, deswegen muss man das erst aktivieren
+
 logging.basicConfig(level=logging.INFO,
                     format='[%(levelname)s: %(asctime)s] %(message)s',
-                    # Mit Datum: %d.%m.%Y
                     datefmt=' %H:%M:%S')
 logging.info("Lorem Ipsum dolor sit amet.")
-
-firefox_profile_path = os.path.expanduser('~/.mozilla/firefox/5mud7ety.Rewe')
 
 
 def main():
@@ -45,9 +43,7 @@ def main():
 
         # `valid_ingredients` support `category` and `url`
         # `ings_missing_cu` miss `[c]ategory` and `[u]rl`
-        # TODO: `valid_ingredients` is used only here. Maybe returning all ingredients with the first and ings_miss_cu with the second argument <24-01-2024>
         valid_ingredients, ings_missing_cu = build_ingredients(recipe_file, icu_file)
-        # print(f"{ings_missing_cu = }")
 
         all_ings_missing_cu.extend(ings_missing_cu)
         all_ingredients.extend(sorted(valid_ingredients + ings_missing_cu,
@@ -90,11 +86,8 @@ def main():
             if ingredient.name == i and ingredient.quantity == q:
                 final_ingredients.append(ingredient)
                 break
-    # TODO: Use logging and/or print output for user <18-01-2024>
     # TODO: When printing give user the chance to reedit list <18-01-2024>
     print("\nFinal shopping list:")
-    # ingredients_table = [f'{header}\n', *final_ingredients]
-    # print(*ingredients_table, sep='\n', end='\n')
     print(f'{header}\n', *final_ingredients, sep='\n', end='\n')
 
     # Archive shopping list and recipes
@@ -107,8 +100,6 @@ def main():
     urls = handle_ing_miss_cu(all_ings_missing_cu,
                               final_ingredients,
                               icu_file)
-    # print()
-    # print(*urls, sep='\n')
 
     # Open firefox with specific profile
     # subpress warnings
