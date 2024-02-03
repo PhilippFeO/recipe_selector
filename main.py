@@ -5,6 +5,15 @@ from ingredient import Ingredient
 from build_ingredients import build_ingredients
 from handle_ing_miss_url import handle_ing_miss_cu
 from archive_contents import archive_contents
+import logging
+
+
+# Standard ist logging.WARNING, INFO ist aber niedriger, deswegen muss man das erst aktivieren
+logging.basicConfig(level=logging.INFO,
+                    format='[%(levelname)s: %(asctime)s] %(message)s',
+                    # Mit Datum: %d.%m.%Y
+                    datefmt=' %H:%M:%S')
+logging.info("Lorem Ipsum dolor sit amet.")
 
 firefox_profile_path = os.path.expanduser('~/.mozilla/firefox/5mud7ety.Rewe')
 

@@ -1,5 +1,6 @@
 import yaml
 import os
+import logging
 from ingredient import Ingredient
 from read_csv import read_csv
 
@@ -45,8 +46,7 @@ def build_ingredients(recipe_file: str, icu_file: str) -> tuple[list[Ingredient]
             category = icu_dict[ingredient_name][0]
             url = icu_dict[ingredient_name][1]
         except KeyError:
-            print(
-                f'Ingredient "{ingredient_name}" missing in "{icu_file}". Default value for <category> will be used.')
+            logging.info(f'Ingredient "{ingredient_name}" missing in "{icu_file}". Default value for <category> will be used.')
             ings_missing_cu.append(
                 Ingredient(**ingredient,
                            meal=recipe_name))

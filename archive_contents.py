@@ -1,7 +1,8 @@
 import os
+import shutil
+import logging
 from datetime import datetime
 from pathlib import Path
-import shutil
 
 
 def archive_contents(shopping_list_file: str, recipes: list[str]):
@@ -29,13 +30,13 @@ def archive_contents(shopping_list_file: str, recipes: list[str]):
     # Copy shopping list into archive folder
     shopping_list_dst = os.path.join(subdir_path, f'{subdir_name}.txt')
     shutil.copy(shopping_list_file, shopping_list_dst)
-    print(f"File '{shopping_list_file}' copied to '{shopping_list_dst}' successfully.")
+    logging.info(f"File '{shopping_list_file}' copied to '{shopping_list_dst}' successfully.")
 
     # Generate hard links for each specified file
     for recipe in recipes:
         dst = os.path.join(subdir_path, os.path.basename(recipe))  # Only filename & extension
         os.link(recipe, dst)
-        print(f"Hard link created for {recipe} at {dst}")
+        logging.info(f"Hard link created for {recipe} at {dst}")
 
     # TODO: Remove following line <31-01-2024>
     print()
