@@ -38,9 +38,7 @@ def main():
 
     # Iterate through command-line arguments starting from the second argument
     # TODO: As exercise: parallelize reading/parsing the recipe.yaml <05-01-2024>
-    for recipe_index in range(1, num_recipes):
-        recipe_file = sys.argv[recipe_index]
-
+    for recipe_file in sys.argv[1:]:
         # `valid_ingredients` support `category` and `url`
         # `ings_missing_cu` miss `[c]ategory` and `[u]rl`
         valid_ingredients, ings_missing_cu = build_ingredients(recipe_file, icu_file)
