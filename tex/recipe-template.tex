@@ -1,0 +1,31 @@
+\documentclass[fontsize=15pt,paper=a4]{scrdoc}
+
+\usepackage[T1]{fontenc}
+\usepackage[ngerman]{babel}
+
+\usepackage{multicol}
+\usepackage{enumitem}
+
+\renewcommand{\familydefault}{\ttdefault}
+\usepackage[left=2.5cm,
+            top=3cm,
+            right=2.5cm,
+            bottom=3cm]{geometry}
+\setkomafont{section}{\ttfamily\Large\centering}
+\setkomafont{subsection}{\ttfamily\large\centering}
+
+\begin{document}
+\section*{\input{titel.tex}}
+\vspace{-15pt}
+\centering{\scriptsize Date: \today}
+\subsection*{Ingredients}
+\begin{multicols}{2}
+    \begin{itemize}[left=0pt, label={}, itemsep=-0.5em, font=\ttfamily]
+        \input{ingredients.tex}
+    \end{itemize}
+\end{multicols}
+\subsection*{Preparation}
+\begin{enumerate}[label=\arabic*.]
+    \input{preparation.tex}
+\end{enumerate}
+\end{document}
