@@ -16,9 +16,6 @@ def build_ingredients(recipe_file: str, icu_file: str) -> tuple[list[Ingredient]
     I know, there are other methods to store objects but Text (in comparison to binary) gives the user the opportunity to edit the data.
     Additionally, this surely becomes necessary because nobody can guarantee that an URL will stay valid. The vendor might change it.
     """
-    # basename provides file name, splittext separates name and extension, [0] uses plain file name
-    # TODO: Add 'recipe: RECIPENAME' key to every recipe to avoid this ugly line of code <05-01-2024>
-    recipe_name = os.path.splitext(os.path.basename(recipe_file))[0].replace('_', ' ')
     recipe_data = None
     with open(recipe_file, 'r') as file:
         recipe_data = yaml.safe_load(file)
@@ -29,6 +26,7 @@ def build_ingredients(recipe_file: str, icu_file: str) -> tuple[list[Ingredient]
 
     # Build ingredients
     # get() returns list of dicts resembling an ingredient as defined in the corresponding yaml file
+    recipe_name = recipe_data.get('recipe', [])[0]
     ingredients: list[dict[str, str]] = recipe_data.get("ingredients", [])
     icu_dict: dict[str, tuple[str, str]] = {}
     try:
@@ -60,10 +58,10 @@ def build_ingredients(recipe_file: str, icu_file: str) -> tuple[list[Ingredient]
 
 
 if __name__ == "__main__":
-    file_path = "recipes/Testgericht.yml"
+    file_path = "recipes/Testgericht.yaml"
     # i=ingredient, c=category, u=url
     icu_file = 'res/ingredient_category_url.csv'
-    aicu_dict: dict[str, tuple[str, str]] = read_csv(icu_file, to_int=False)
+    aicu_dict: dict[str, tuple[str, str]] = read_csv(icu_file)
     ingredients = build_ingredients(file_path, aicu_dict)
 
     for i in ingredients:
