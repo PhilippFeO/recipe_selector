@@ -48,31 +48,3 @@ class Ingredient:
                                                 category])))
         s = ' '.join((s, meal))
         return s
-
-
-# class Recipe:
-#     def __init__(self, title, servings, ingredients, instructions):
-#         self.title = title
-#         self.servings = servings
-#         self.ingredients = [Ingredient(**ingredient)
-#                             for ingredient in ingredients]
-#         self.instructions = instructions
-#
-#     def __str__(self):
-#         recipe_str = f"Recipe: {self.title}\nServings: {self.servings}\n\nIngredients:"
-#         for ingredient in self.ingredients:
-#             recipe_str += f"\n- {ingredient}"
-#
-#         recipe_str += "\n\nInstructions:"
-#         for step in self.instructions:
-#             step_number = step.get("step", "N/A")
-#             description = step.get("description", "N/A")
-#             recipe_str += f"\n{step_number}. {description}"
-#
-#         return recipe_str
-#
-#
-# def read_recipe(file_path):
-#     with open(file_path, 'r') as file:
-#         recipe_data = yaml.safe_load(file)
-#     return Recipe(**recipe_data['recipe'])
