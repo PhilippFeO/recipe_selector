@@ -14,18 +14,20 @@
 \setkomafont{section}{\ttfamily\Large\centering}
 \setkomafont{subsection}{\ttfamily\large\centering}
 
+\pagenumbering{gobble}
+
 \begin{document}
-\section*{\input{title.tex}}
+\section*{\input{res/title.tex}}
 \vspace{-15pt}
-\centering{\scriptsize Date: \today}
-\subsection*{Ingredients}
+\centering{\scriptsize Datum: \today}
+\subsection*{Zutaten}
 \begin{multicols}{2}
     \begin{itemize}[left=0pt, label={-}, itemsep=-0.15em]
-        \input{ingredients.tex}
+        \input{res/ingredients.tex}
     \end{itemize}
 \end{multicols}
-\subsection*{Preparation}
+\subsection*{Zubereitung}
 \begin{enumerate}[left=0pt]
-    \input{preparation.tex}
+    \input{res/preparation.tex}
 \end{enumerate}
 \end{document}
