@@ -1,11 +1,14 @@
 \documentclass[fontsize=15pt,paper=a4]{scrdoc}
 
 \usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc} % UTF-8-Codierung
 \usepackage[ngerman]{babel}
+
+% \usepackage{FiraMono}
+% \usepackage{fira}
 
 \usepackage{multicol}
 \usepackage{enumitem}
-
 \renewcommand{\familydefault}{\ttdefault}
 \usepackage[left=2.5cm,
             top=3cm,
@@ -20,7 +23,7 @@
 \section*{\input{res/title.tex}}
 \vspace{-15pt}
 \centering{\scriptsize Datum: \today}
-\subsection*{Zutaten}
+\subsection*{Zutaßten}
 \begin{multicols}{2}
     \begin{itemize}[left=0pt, label={-}, itemsep=-0.15em]
         \input{res/ingredients.tex}
