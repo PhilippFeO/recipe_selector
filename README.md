@@ -14,6 +14,8 @@ make [`select_recipes.sh`](./select_recipes.sh) executable via `chmod +x select_
 2. Place your recipes as `yaml` files in a `recipes/` folder (you may create one). (Disclaimer: This is subject to change in the near future.)  
     2.1. Your recipe should have the following structure:
 ```yaml
+recipe:
+    - name: Spaghetti Bolognese
 ingredients:
     - name: Spaghetti
       quantity: 250g
