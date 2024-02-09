@@ -11,7 +11,7 @@ class Recipe:
         self.recipe_name = recipe_name
         self.ingredients: list[Ingredient] = [Ingredient(**ingredient)
                                               for ingredient in ingredients]
-        self.preparation: list[str] = preparation
+        self.preparation: list[str] = [step.replace('„', '"`').replace('“', '"\'') for step in preparation]
 
     def to_latex(self):
         # TODO: Write strings to pipe, read form pipe in latex file <06-02-2024>
