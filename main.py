@@ -68,6 +68,7 @@ def main():
             continue
         file_stem = filename.split('.')[0]
         misc_ingredients = collect_ingredients_helper(f'{dir}/{filename}')
+        all_ingredients.extend(misc_ingredients)
         shopping_list_str.append(f'{file_stem}:\n' +
                                  f'{header}' +
                                  '\n'.join((f"{ingredient}" for ingredient in misc_ingredients)) +
@@ -82,6 +83,7 @@ def main():
     # Open shopping list in $EDITOR to modify it
     # (some ingredients may already be in stock, like salt)
     editor = os.environ['EDITOR']
+    # TODO: Set cursor on Position (3,1) if vi, vim, nvim <10-02-2024>
     subprocess.run([editor, shopping_list_file])
 
     # Filter final ingredients for `name` and `quantity`
@@ -96,9 +98,9 @@ def main():
     # awk adds '\n', hence there is an empty string entry on the last index
     # I dont know why awk does it and I dont care
     # list[str]!!! The edited table was splitted above and 'final_ingerdients' contains the names of the ingredients, not the objects!
-    # TODO: User might delete shopping list completly => [2:-1] will return an empty list <05-01-2024>
     # TODO: Consistency checks for the remaining lines <17-01-2024>
-    final_ingredient_names: list[str] = awk_output.stdout.split('\n')[2:-1]
+    final_ingredient_names: list[str] = awk_output.stdout.split('\n')[:-1]
+    final_ingredient_names = [e for e in final_ingredient_names if e not in {' • ', 'Name • Menge'}]
     # Transform list of "name • quantity"-strings into list of tuples with (name, quantity) entries
     ing_quant = ((i.strip(), q.strip()) for i, q in (fin.split('•') for fin in final_ingredient_names))
     # Filter `all_ingredients` to keep described ones by `final_ingredient_names`
@@ -106,7 +108,8 @@ def main():
     final_ingredients: list[Ingredient] = []
     for i, q in ing_quant:
         for ingredient in all_ingredients:
-            if ingredient.name == i and ingredient.quantity == q:
+            # Enrties in shopping list are cut after 15 chars, so comparison is based on these
+            if ingredient.name[:Ingredient._padding] == i and ingredient.quantity == q:
                 final_ingredients.append(ingredient)
                 break
     # TODO: When printing give user the chance to reedit list <18-01-2024>
