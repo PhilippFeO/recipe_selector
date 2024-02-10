@@ -52,4 +52,5 @@ if __name__ == '__main__':
             logging.error(f'Compilation of "{recipe_file}" failed.')
         else:
             basename = Path(recipe_file).stem
+            subprocess.run(['mkdir', '-p', 'recipes/pdf/'])
             subprocess.run(['mv', 'res/out/recipe-template.pdf', f'recipes/pdf/{basename}.pdf'])
