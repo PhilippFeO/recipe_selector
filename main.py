@@ -13,13 +13,13 @@ firefox_profile_path = os.path.expanduser('~/.mozilla/firefox/5mud7ety.Rewe')
 logging.basicConfig(level=logging.INFO,
                     format='[%(levelname)s: %(asctime)s] %(message)s',
                     datefmt=' %H:%M:%S')
-logging.info("Lorem Ipsum dolor sit amet.")
 
 
 def main():
     """
     This function is called via `python3 main.py recipe-1.yaml ...`. Hence, reading and checking `sys.argv`.
     """
+    sys.argv = ['main.py', 'Testgericht.yaml']
     num_recipes = len(sys.argv)
 
     # Check if at least one file is provided
@@ -35,24 +35,49 @@ def main():
     # Superlist to store ingredients from all files
     all_ingredients: list[Ingredient] = []
     all_ings_missing_cu: list[Ingredient] = []
+    header = Ingredient.to_table_string()
+    hline = '\n--------------------------------------------------------------------\n'
+    header = header + hline
+    shopping_list_str = []
 
-    # Iterate through command-line arguments starting from the second argument
-    # TODO: As exercise: parallelize reading/parsing the recipe.yaml <05-01-2024>
-    for recipe_file in sys.argv[1:]:
+    def collect_ingredients_helper(recipe_file):
         # `valid_ingredients` support `category` and `url`
         # `ings_missing_cu` miss `[c]ategory` and `[u]rl`
         valid_ingredients, ings_missing_cu = build_ingredients(recipe_file, icu_file)
-
         all_ings_missing_cu.extend(ings_missing_cu)
-        all_ingredients.extend(sorted(valid_ingredients + ings_missing_cu,
-                                      key=lambda ingredient: ingredient.name))
+        return sorted(valid_ingredients + ings_missing_cu,
+                      key=lambda ingredient: ingredient.name)
+
+    # Iterate through command-line arguments starting from the second argument
+    # TODO: As exercise: parallelize reading/parsing the recipe.yaml <05-01-2024>
+    shopping_list_str.append(f'{header}')
+    for recipe_file in sys.argv[1:]:
+        all_ingredients.extend(collect_ingredients_helper(recipe_file))
+    shopping_list_str.append('\n'.join((f"{ingredient}" for ingredient in all_ingredients)) +
+                             '\n' * 3)
+
+    dir = 'misc'
+    directory = os.fsencode(dir)
+    # I want to add a destinct heading for each file in dir misc.
+    # Iterating over `sys.argv[1:] + misc_files` would only be possibe with various if-statements
+    # because the CLI provided files don't get a "filename" heading like `misc_files` do.
+    # To many if-statements affect readability, hence two for loops and helpfer function.
+    for file in os.listdir(directory):
+        filename = os.fsdecode(file)
+        if '.gitignore' in filename:
+            continue
+        file_stem = filename.split('.')[0]
+        misc_ingredients = collect_ingredients_helper(f'{dir}/{filename}')
+        shopping_list_str.append(f'{file_stem}:\n' +
+                                 f'{header}' +
+                                 '\n'.join((f"{ingredient}" for ingredient in misc_ingredients)) +
+                                 '\n' * 3)
 
     # Write the shopping list
     shopping_list_file = 'shopping_list.txt'
-    header = Ingredient.to_table_string()
     with open(shopping_list_file, 'w') as slf:
-        slf.write(f"{header}\n\n")
-        slf.writelines((f"{ingredient}\n" for ingredient in all_ingredients))
+        for partial_shopping_list in shopping_list_str:
+            slf.write(partial_shopping_list)
 
     # Open shopping list in $EDITOR to modify it
     # (some ingredients may already be in stock, like salt)
