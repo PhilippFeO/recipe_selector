@@ -1,0 +1,35 @@
+\documentclass[fontsize=15pt,paper=a4]{scrdoc}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc} % UTF-8-Codierung
+\usepackage[ngerman]{babel}
+
+\usepackage{FiraMono}
+
+\usepackage{multicol}
+\usepackage{enumitem}
+\renewcommand{\familydefault}{\ttdefault}
+\usepackage[left=2.5cm,
+            top=3cm,
+            right=2.5cm,
+            bottom=3cm]{geometry}
+\setkomafont{section}{\ttfamily\Large\centering}
+\setkomafont{subsection}{\ttfamily\large\centering}
+
+\pagenumbering{gobble}
+
+\begin{document}
+\section*{\input{res/title.tex}}
+\vspace{-15pt}
+\centering{\scriptsize Datum: \today}
+\subsection*{Zutaten}
+\begin{multicols}{2}
+    \begin{itemize}[left=0pt, label={-}, itemsep=-0.15em]
+        \input{res/ingredients.tex}
+    \end{itemize}
+\end{multicols}
+\subsection*{Zubereitung}
+\begin{enumerate}[left=0pt]
+    \input{res/preparation.tex}
+\end{enumerate}
+\end{document}
