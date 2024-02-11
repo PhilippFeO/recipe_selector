@@ -4,17 +4,16 @@
 \usepackage[utf8]{inputenc} % UTF-8-Codierung
 \usepackage[ngerman]{babel}
 
-\usepackage{FiraMono}
-
 \usepackage{multicol}
 \usepackage{enumitem}
+\usepackage[left=1.5cm,
+            top=1.5cm,
+            right=1.5cm,
+            bottom=1.5cm]{geometry}
+\usepackage{FiraMono}
 \renewcommand{\familydefault}{\ttdefault}
-\usepackage[left=2.5cm,
-            top=3cm,
-            right=2.5cm,
-            bottom=3cm]{geometry}
-\setkomafont{section}{\ttfamily\Large\centering}
-\setkomafont{subsection}{\ttfamily\large\centering}
+\addtokomafont{section}{\ttfamily\Large\centering}
+\addtokomafont{subsection}{\ttfamily\large\centering}
 
 \pagenumbering{gobble}
 
@@ -28,6 +27,7 @@
         \input{res/ingredients.tex}
     \end{itemize}
 \end{multicols}
+
 \subsection*{Zubereitung}
 \begin{enumerate}[left=0pt]
     \input{res/preparation.tex}
