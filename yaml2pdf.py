@@ -22,7 +22,13 @@ class Recipe:
         with open(f'{res_dir}/title.tex', 'w') as recipe_name_file:
             recipe_name_file.write(self.recipe_name)
         with open(f'{res_dir}/ingredients.tex', 'w') as ingredients_file:
-            ingredients_file.writelines((f'\\item {ing.quantity} {ing.name}\n' for ing in self.ingredients))
+            # sorted sets False before True
+            ings_sorted = sorted(self.ingredients, key=lambda ing: ing.optional)
+            ingredients_file.writelines(
+                (f'\\item {ing.quantity} {ing.name}\n'
+                    if not ing.optional
+                 else f'\\item \\textcolor{{gray}}{{{ing.quantity} {ing.name}}}\n'
+                 for ing in ings_sorted))
         with open(f'{res_dir}/preparation.tex', 'w') as preparation_file:
             preparation_file.writelines((f'\\item {step[3:]}\n' for step in self.preparation))
 
