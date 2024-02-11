@@ -63,6 +63,7 @@ def main():
     # because the CLI provided files don't get a "filename" heading like `misc_files` do.
     # To many if-statements affect readability, hence two for loops and helpfer function.
     for file in os.listdir(directory):
+        # TODO: Name nicht aus Dateiname ableiten, sonder 'recipe.name' in der Datei selbst <11-02-2024>
         filename = os.fsdecode(file)
         if '.gitignore' in filename:
             continue
