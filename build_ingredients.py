@@ -26,7 +26,7 @@ def build_ingredients(recipe_file: str, icu_file: str) -> tuple[list[Ingredient]
 
     # Build ingredients
     # get() returns list of dicts resembling an ingredient as defined in the corresponding yaml file
-    recipe_name = recipe_data.get('recipe', [])[0]
+    recipe_name = recipe_data.get('recipe', [])[0]['name']
     ingredients: list[dict[str, str]] = recipe_data.get("ingredients", [])
     icu_dict: dict[str, tuple[str, str]] = {}
     try:
