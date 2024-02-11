@@ -17,11 +17,18 @@
 
 \pagenumbering{gobble}
 
+% Latex trennt dicktengleiche Schriften nicht, sodass über den Rand hinaus geschrieben wird. Das wird damit verhindert (aber was „sloppy“ genau macht, weiß ich auch nicht)
+\sloppy
+
 \begin{document}
 \section*{\input{res/title.tex}}
 \vspace{-15pt}
-\centering{\scriptsize Datum: \today}
+\begin{center}
+    \scriptsize Datum: \today
+\end{center}
+
 \subsection*{Zutaten}
+% TODO: Zwischenraum bei ungeraden Zutaten: Tabelle. Kann leicht mit & in res/ingredients.tex generiert werden. Bindestrich einfach per - <11-02-2024>
 \begin{multicols}{2}
     \begin{itemize}[left=0pt, label={-}, itemsep=-0.15em]
         \input{res/ingredients.tex}
