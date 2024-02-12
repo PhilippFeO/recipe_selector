@@ -3,6 +3,8 @@ shopping_list.txt
 todo.md
 *.csv
 *.yaml
+# 'Selection' is a symlink
+Selection
 hooks/
 2024/
 Rezepte.md
@@ -12,4 +14,5 @@ tex/ingredients.tex
 tex/preparation.tex
 tex/recipe-template.pdf
 out/
-pdf
+# Ignore files, directories and links
+*pdf*
