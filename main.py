@@ -82,10 +82,13 @@ def main():
             slf.write(partial_shopping_list)
 
     # Open shopping list in $EDITOR to modify it
-    # (some ingredients may already be in stock, like salt)
+    # (some ingredients may already be in stock, like salt, so we can delete/don't have to buy it)
     editor = os.environ['EDITOR']
-    # TODO: Set cursor on Position (3,1) if vi, vim, nvim <10-02-2024>
-    subprocess.run([editor, shopping_list_file])
+    # Set cursor on Position (3,1) for my Vi, Vim and Neovim friends :)
+    if editor in {'vi', 'vim', 'nvim'}:
+        subprocess.run([editor, '+call cursor(3, 1)', shopping_list_file])
+    else:
+        subprocess.run([editor, shopping_list_file])
 
     # Filter final ingredients for `name` and `quantity`
     # Dont hardcode column number, otherwise changes have to be adapted here again => annoying
