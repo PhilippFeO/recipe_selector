@@ -19,7 +19,7 @@ def main():
     """
     This function is called via `python3 main.py recipe-1.yaml ...`. Hence, reading and checking `sys.argv`.
     """
-    sys.argv = ['main.py', 'Testgericht.yaml']
+    sys.argv = ['main.py', 'recipes/Testgericht.yaml']
     num_recipes = len(sys.argv)
 
     # Check if at least one file is provided
