@@ -1,5 +1,4 @@
 import yaml
-import os
 import logging
 from ingredient import Ingredient
 from read_csv import read_csv
