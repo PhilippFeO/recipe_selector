@@ -3,19 +3,21 @@
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc} % UTF-8-Codierung
 \usepackage[ngerman]{babel}
-\usepackage{multicol}
-\usepackage{enumitem}
+
+\usepackage{tabularx} % To span table over full \textwidth
+\renewcommand{\arraystretch}{1.15} % Increase spacing between rows
 \usepackage[left=1.5cm,
             top=1.5cm,
             right=1.5cm,
             bottom=1.5cm]{geometry}
-\usepackage{xcolor}
+\usepackage{xcolor} % Print optional ingredients in gray 
+% Monospace font as default everywhere
 \usepackage{FiraMono}
 \renewcommand{\familydefault}{\ttdefault}
 \addtokomafont{section}{\ttfamily\Large\centering}
 \addtokomafont{subsection}{\ttfamily\large\centering}
 
-\pagenumbering{gobble}
+\pagenumbering{gobble} % No page numbering
 
 % Latex trennt dicktengleiche Schriften nicht, sodass über den Rand hinaus geschrieben wird. Das wird damit verhindert (aber was „sloppy“ genau macht, weiß ich auch nicht)
 \sloppy
@@ -28,15 +30,12 @@
 \end{center}
 
 \subsection*{Zutaten}
-% TODO: Zwischenraum bei ungeraden Zutaten: Tabelle. Kann leicht mit & in res/ingredients.tex generiert werden. Bindestrich einfach per - <11-02-2024>
-\begin{multicols}{2}
-    \begin{itemize}[left=0pt, label={-}, itemsep=-0.15em]
-        \input{res/ingredients.tex}
-    \end{itemize}
-\end{multicols}
+\begin{tabularx}{\textwidth}{XX}
+    \input{res/ingredients.tex}
+\end{tabularx}
 
 \subsection*{Zubereitung}
-\begin{enumerate}[left=0pt]
+\begin{enumerate}
     \input{res/preparation.tex}
 \end{enumerate}
 \end{document}
