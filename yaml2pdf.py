@@ -80,7 +80,7 @@ if __name__ == '__main__':
         recipe: Recipe = read_recipe(recipe_file)
         recipe.to_latex()
         # Compile recipe before moving to next
-        cp: subprocess.CompletedProcess = subprocess.run(['./compile_recipe.sh', 'recipe-template.tex'],
+        cp: subprocess.CompletedProcess = subprocess.run(['./compile_recipe.sh', 'template.tex'],
                                                          # stdout=subprocess.DEVNULL,
                                                          # stderr=subprocess.DEVNULL
                                                          )
@@ -89,4 +89,4 @@ if __name__ == '__main__':
         else:
             basename = Path(recipe_file).stem
             subprocess.run(['mkdir', '-p', 'recipes/pdf/'])
-            subprocess.run(['mv', 'res/out/recipe-template.pdf', f'recipes/pdf/{basename}.pdf'])
+            subprocess.run(['mv', 'res/out/template.pdf', f'recipes/pdf/{basename}.pdf'])
