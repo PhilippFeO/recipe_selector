@@ -2,6 +2,7 @@ import yaml
 import argparse
 import subprocess
 import logging
+from math import ceil
 from pathlib import Path
 from ingredient import Ingredient
 from itertools import zip_longest
@@ -50,7 +51,7 @@ class Recipe:
         # I prefere having optional (gray) ingredients in the right column, ie. I have to split
         # `ings_sorted` in half and align both sublists as columns or do some index mangling.
         # In case of odd number of ingredients, `fillvalue` enhances the second shorter iterable
-        middle_idx = len(ings_sorted) // 2
+        middle_idx = ceil(len(ings_sorted) / 2)
         for ing1, ing2 in zip_longest(ings_sorted[:middle_idx],
                                       ings_sorted[middle_idx:],
                                       fillvalue=None):
@@ -72,7 +73,7 @@ if __name__ == '__main__':
     p.add_argument("recipe_yaml",
                    help="One or more yaml files containing a recipe.",
                    type=str,
-                   nargs='+',
+                   nargs='*',
                    default=["recipes/Testgericht.yaml"])
     args = p.parse_args()
 
