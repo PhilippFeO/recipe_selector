@@ -42,6 +42,10 @@ if [ -d "$recipes" ]; then
 
     # Retrieve ingredients of selected files
     python3 main.py "${selected_files[@]}"
+
+    # Deprecation warning
+    sleep 3 # Get users attention (hopefully)
+    echo "This repository is depracted in favor of 'https://github.com/PhilippFeO/grocery-shopper'. It will be deleted in the middle distant future. If you like the repository, consider switching. You can keep your recipes and res/ingredient_category_url.csv file. If any questions arise, feel free to open an issue!"
 else
     echo "Error: Directory '$recipes' not found."
     exit 1

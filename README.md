@@ -1,3 +1,5 @@
+This repository is depracted in favor of [grocery-shopper](https://github.com/PhilippFeO/grocery-shopper). It will be deleted in the middle distant future. If you like the repository, consider switching. You can keep your recipes and the `res/ingredient_category_url.csv` file. If any questions arise, feel free to open an issue!
+
 # Recipe Selector #
 No "What should I eat for dinner today?" and manually buying ever again! Recipes are selected randomly and a firefox instance will open to buy the necessary ingredients online[^1] – Deciding and grocery shopping in one step!
 
